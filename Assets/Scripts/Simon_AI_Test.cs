@@ -42,7 +42,9 @@ namespace Simon.AI
 
         private bool pickingUpFlag = false;
 
-        private const float pickupTimer = 2.5f;
+        private bool hasFlag = false;
+
+        private const float pickupTimer = 5f;
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -73,6 +75,9 @@ namespace Simon.AI
         /// </summary>
         protected override void ExecuteAI()
         {
+
+            if (pickingUpFlag)
+                NavMeshAgent.isStopped = true;
 
             isAttacking = Attack();
 
@@ -133,7 +138,7 @@ namespace Simon.AI
                     }
                 }
             }
-
+            
             return false;
 
         }
@@ -170,6 +175,7 @@ namespace Simon.AI
         /// <returns>A random walkable position, or the current position if no valid destination found</returns>
         private Vector3 PickRandomDestination()
         {
+
             Vector3 currentPosition = transform.position;
 
             for (int attempt = 0; attempt < maxAttempts; attempt++)
@@ -194,6 +200,7 @@ namespace Simon.AI
             }
 
             return currentPosition;
+
         }
 
         /// <summary>
@@ -202,18 +209,30 @@ namespace Simon.AI
         /// <returns>true if we have arrived</returns>
         private bool HasReachedDestination()
         {
+
             if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && foundFlag)
             {
+
                 if (!pickingUpFlag)
+                {
+
+                    pickingUpFlag = true;
                     StartCoroutine(PickupFlag());
+
+                }
+
             }
             else if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && !foundFlag)
             {
+
                 return true;
+
             }
             else if (!NavMeshAgent.pathPending && !NavMeshAgent.hasPath && Vector3.Distance(transform.position, currentDestination) <= ARRIVAL_THRESHOLD)
             {
+
                 return true;
+
             }
 
             return false;
@@ -224,14 +243,15 @@ namespace Simon.AI
         private IEnumerator PickupFlag()
         {
 
-            pickingUpFlag = true;
-
             yield return new WaitForSeconds(pickupTimer);
 
             foundFlag = false;
 
             Vector3? flagPosition = CaptureTheFlag.Instance.GetOwnFlagPosition(this);
             currentDestination = flagPosition.Value;
+            NavMeshAgent.isStopped = false;
+            pickingUpFlag = false;
+            hasFlag = true;
             MoveTo(currentDestination);
 
         }

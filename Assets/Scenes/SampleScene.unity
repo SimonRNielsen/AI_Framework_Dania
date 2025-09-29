@@ -14902,8 +14902,8 @@ MonoBehaviour:
   maxVisiblePortraits: 5
   matchTimerText: {fileID: 1977705875}
   suddenDeathText: {fileID: 888581740}
-  redKnockoutText: {fileID: 661164665}
-  blueKnockoutText: {fileID: 1702647809}
+  redKnockoutText: {fileID: 1702647809}
+  blueKnockoutText: {fileID: 661164665}
   redFlagCaptureText: {fileID: 1766157134}
   blueFlagCaptureText: {fileID: 573403458}
 --- !u!1001 &524067614
