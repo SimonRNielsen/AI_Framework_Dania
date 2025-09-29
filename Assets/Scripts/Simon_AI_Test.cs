@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using AIGame.Core;
+using System.Collections;
 
 namespace Simon.AI
 {
@@ -31,14 +32,29 @@ namespace Simon.AI
         /// </summary>
         private Vector3 currentDestination;
 
+        private bool isAttacking = false;
+
+        private bool isGettingPowerUp = false;
+
+        private bool isGettingFlag = false;
+
+        private bool foundFlag = false;
+
+        private bool pickingUpFlag = false;
+
+        private const float pickupTimer = 2.5f;
+
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
         protected override void ConfigureStats()
         {
 
-            AllocateStat(StatType.Speed, 5);
-            AllocateStat(StatType.VisionRange, 15);
+            AllocateStat(StatType.Speed, 3);
+            AllocateStat(StatType.VisionRange, 7);
+            AllocateStat(StatType.ProjectileRange, 7);
+            AllocateStat(StatType.ReloadSpeed, 1);
+            AllocateStat(StatType.DodgeCooldown, 2);
 
         }
 
@@ -58,11 +74,91 @@ namespace Simon.AI
         protected override void ExecuteAI()
         {
 
-            if (HasReachedDestination())
+            isAttacking = Attack();
+
+            if (!isAttacking)
+                isGettingFlag = GetFlag();
+
+            if (!isAttacking && !isGettingFlag && GetVisiblePowerUpsSnapshot().Count > 0)
             {
 
-                currentDestination = PickRandomDestination();
-                MoveTo(currentDestination);
+            }
+            else
+            {
+
+                isGettingPowerUp = false;
+
+            }
+
+            if (!isAttacking && !isGettingFlag && !isGettingPowerUp)
+            {
+
+                NavMeshAgent.isStopped = false;
+
+                if (HasReachedDestination())
+                {
+
+                    currentDestination = PickRandomDestination();
+                    MoveTo(currentDestination);
+
+                }
+
+
+            }
+
+        }
+
+
+        private bool GetFlag()
+        {
+
+            var detectFlag = GetVisibleFlagsSnapShot();
+
+            if (detectFlag.Count > 0)
+            {
+                foreach (var flag in detectFlag)
+                {
+                    if (flag.Team == MyDetectable.TeamID)
+                    {
+                        Debug.Log("Own flag detected");
+                        continue;
+                    }
+                    else
+                    {
+                        Debug.Log("Enemy flag detected");
+                        currentDestination = flag.Position;
+                        MoveTo(currentDestination);
+                        foundFlag = true;
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+
+        }
+
+        private bool Attack()
+        {
+
+            if (GetVisibleEnemiesSnapshot().Count > 0)
+            {
+                NavMeshAgent.isStopped = true;
+                RefreshOrAcquireTarget();
+                if (TryGetTarget(out PerceivedAgent target))
+                {
+                    FaceTarget(target.Position);
+                    ThrowBallAt(target);
+                    return true;
+                }
+
+                return false;
+
+            }
+            else
+            {
+
+                return false;
 
             }
 
@@ -106,8 +202,12 @@ namespace Simon.AI
         /// <returns>true if we have arrived</returns>
         private bool HasReachedDestination()
         {
-
-            if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD)
+            if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && foundFlag)
+            {
+                if (!pickingUpFlag)
+                    StartCoroutine(PickupFlag());
+            }
+            else if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && !foundFlag)
             {
                 return true;
             }
@@ -117,6 +217,22 @@ namespace Simon.AI
             }
 
             return false;
+
+        }
+
+
+        private IEnumerator PickupFlag()
+        {
+
+            pickingUpFlag = true;
+
+            yield return new WaitForSeconds(pickupTimer);
+
+            foundFlag = false;
+
+            Vector3? flagPosition = CaptureTheFlag.Instance.GetOwnFlagPosition(this);
+            currentDestination = flagPosition.Value;
+            MoveTo(currentDestination);
 
         }
 
