@@ -44,7 +44,11 @@ namespace Simon.AI
 
         private bool hasFlag = false;
 
-        private const float pickupTimer = 5f;
+        private PerceivedPowerUp targetPowerUp;
+
+        private const float pickupTimer = 4f;
+
+        public bool HasFlag { get => hasFlag; }
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -66,7 +70,19 @@ namespace Simon.AI
         /// </summary>
         protected override void StartAI()
         {
-            // TODO: Initialize your AI here
+
+            CaptureTheFlag.Instance.FlagPickedUp += FlagPickedUp;
+            MyFlagCarrier.Pickup += GotFlag;
+
+        }
+
+
+        private void OnDisable()
+        {
+
+            CaptureTheFlag.Instance.FlagPickedUp -= FlagPickedUp;
+            MyFlagCarrier.Pickup -= GotFlag;
+
         }
 
         /// <summary>
@@ -84,32 +100,59 @@ namespace Simon.AI
             if (!isAttacking)
                 isGettingFlag = GetFlag();
 
-            if (!isAttacking && !isGettingFlag && GetVisiblePowerUpsSnapshot().Count > 0)
-            {
-
-            }
-            else
-            {
-
-                isGettingPowerUp = false;
-
-            }
+            //if (!isAttacking && !isGettingFlag)
+            //    isGettingPowerUp = GetPowerUps();
 
             if (!isAttacking && !isGettingFlag && !isGettingPowerUp)
+                DoThisInstead();
+
+        }
+
+
+        private void DoThisInstead()
+        {
+
+            NavMeshAgent.isStopped = false;
+
+            if (HasReachedDestination())
             {
 
-                NavMeshAgent.isStopped = false;
-
-                if (HasReachedDestination())
-                {
-
-                    currentDestination = PickRandomDestination();
-                    MoveTo(currentDestination);
-
-                }
-
+                currentDestination = PickRandomDestination();
+                MoveTo(currentDestination);
 
             }
+
+        }
+
+
+        private bool GetPowerUps()
+        {
+
+            var powerUps = GetVisiblePowerUpsSnapshot();
+            float maxDistance = 1000;
+            Vector3 newDestination = Vector3.zero;
+
+            if (powerUps.Count > 0) 
+                foreach (var power in powerUps)
+                {
+                    float distance = Vector3.Distance(gameObject.transform.position, power.Position);
+                    if (distance < maxDistance)
+                    {
+                        newDestination = power.Position;
+                        maxDistance = distance;
+                        targetPowerUp = power;
+                    }
+                }
+
+            if (newDestination != Vector3.zero)
+            {
+                NavMeshAgent.isStopped = false;
+                currentDestination = newDestination;
+                MoveTo(newDestination);
+                return true;
+            }
+
+            return false;
 
         }
 
@@ -138,7 +181,7 @@ namespace Simon.AI
                     }
                 }
             }
-            
+
             return false;
 
         }
@@ -225,6 +268,11 @@ namespace Simon.AI
             else if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && !foundFlag)
             {
 
+                //TryConsumePowerup(targetPowerUp.Id);
+                
+                if (hasFlag)
+                    hasFlag = false;
+
                 return true;
 
             }
@@ -246,13 +294,30 @@ namespace Simon.AI
             yield return new WaitForSeconds(pickupTimer);
 
             foundFlag = false;
+            pickingUpFlag = false;
 
+        }
+
+
+        private void GotFlag()
+        {
+
+            hasFlag = true;
             Vector3? flagPosition = CaptureTheFlag.Instance.GetOwnFlagPosition(this);
             currentDestination = flagPosition.Value;
             NavMeshAgent.isStopped = false;
-            pickingUpFlag = false;
-            hasFlag = true;
             MoveTo(currentDestination);
+
+        }
+
+
+        private void FlagPickedUp(Team team)
+        {
+
+            if (team != MyDetectable.TeamID)
+            {
+                
+            }
 
         }
 
