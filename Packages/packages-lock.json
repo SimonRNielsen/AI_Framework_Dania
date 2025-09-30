@@ -1,18 +1,16 @@
 {
   "dependencies": {
     "com.dania.aigame.agent.example": {
-      "version": "https://github.com/DaniaGames/com.dania.aigame.agent.example.git",
+      "version": "file:C:/Users/oblit/Desktop/Forløb/Kunstig Intelligens/com.dania.aigame.agent.example-main/com.dania.aigame.agent.example-main",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "962889025aca4f6d039126bcc1408bdbaf333fc8"
+      "source": "local",
+      "dependencies": {}
     },
     "com.dania.aigame.core": {
-      "version": "https://github.com/DaniaGames/com.dania.aigame.core.git",
+      "version": "file:C:/Users/oblit/Desktop/Forløb/Kunstig Intelligens/com.dania.aigame.core-main/com.dania.aigame.core-main",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "2828eda05dc117eaa6e277d164fb0bc15019e703"
+      "source": "local",
+      "dependencies": {}
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

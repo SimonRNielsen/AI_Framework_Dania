@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "com.dania.aigame.agent.example": "https://github.com/DaniaGames/com.dania.aigame.agent.example.git",
-    "com.dania.aigame.core": "https://github.com/DaniaGames/com.dania.aigame.core.git",
+    "com.dania.aigame.agent.example": "file:C:/Users/oblit/Desktop/Forløb/Kunstig Intelligens/com.dania.aigame.agent.example-main/com.dania.aigame.agent.example-main",
+    "com.dania.aigame.core": "file:C:/Users/oblit/Desktop/Forløb/Kunstig Intelligens/com.dania.aigame.core-main/com.dania.aigame.core-main",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.8",
     "com.unity.collab-proxy": "2.9.2",

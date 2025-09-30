@@ -1,7 +1,9 @@
-using UnityEngine;
-using UnityEngine.AI;
 using AIGame.Core;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Simon.AI
 {
@@ -13,42 +15,69 @@ namespace Simon.AI
     {
 
         /// <summary>
-        /// How many times will we try to find a  random location before we give up
-        /// </summary>
-        private int maxAttempts = 30;
-
-        /// <summary>
-        /// The radius we will wander
-        /// </summary>
-        private float wanderRadius = 200f;
-
-        /// <summary>
         /// How far away from your destination we will accept as arrived
         /// </summary>
-        private const float ARRIVAL_THRESHOLD = 0.5f;
+        public const float ARRIVAL_THRESHOLD = 0.5f;
 
         /// <summary>
         /// The current destination this agent is walking towards
         /// </summary>
-        private Vector3 currentDestination;
+        public Vector3 CurrentDestination;
 
-        private bool isAttacking = false;
 
-        private bool isGettingPowerUp = false;
+        public bool IsAttacking = false;
 
-        private bool isGettingFlag = false;
+        public bool IsGettingPowerUp = false;
 
-        private bool foundFlag = false;
+        public bool IsGettingFlag = false;
 
-        private bool pickingUpFlag = false;
+        public bool FoundFlag = false;
 
-        private bool hasFlag = false;
+        public bool PickingUpFlag = false;
 
-        private PerceivedPowerUp targetPowerUp;
+        public bool HasFlag = false;
+
+        public PerceivedPowerUp TargetPowerUp;
 
         private const float pickupTimer = 4f;
 
-        public bool HasFlag { get => hasFlag; }
+        private States_Simon currentState = States_Simon.None;
+
+        public States_Simon PreviousState { get; set; }
+
+        private IState_Simon<Simon_AI_Test> activeState;
+
+        private static Dictionary<States_Simon, IState_Simon<Simon_AI_Test>> states = new Dictionary<States_Simon, IState_Simon<Simon_AI_Test>>();
+
+        public bool OwnFlagCarried { get; set; }
+
+        public bool EnemyFlagCarried { get; set; }
+
+        public States_Simon CurrentState
+        {
+            get => currentState;
+            set
+            {
+
+                if (value == currentState) return;
+
+                if (currentState != States_Simon.None)
+                    PreviousState = currentState;
+
+                if (activeState != null)
+                    activeState.Exit(this);
+
+                if (states.TryGetValue(value, out IState_Simon<Simon_AI_Test> state))
+                    activeState = state;
+                else
+                    AddNewState(value);
+
+                activeState.Enter(this);
+
+                currentState = value;
+
+            }
+        }
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -72,16 +101,37 @@ namespace Simon.AI
         {
 
             CaptureTheFlag.Instance.FlagPickedUp += FlagPickedUp;
+            CaptureTheFlag.Instance.FlagDropped += FlagDropped;
+            CaptureTheFlag.Instance.FlagReturned += FlagReturned;
+            CaptureTheFlag.Instance.FlagCaptured += FlagCaptured;
             MyFlagCarrier.Pickup += GotFlag;
+            MyFlagCarrier.Drop += () => HasFlag = false;
+            MyFlagCarrier.Capture += () => HasFlag = false;
+            EnemyEnterVision += () => CurrentState = States_Simon.AttackState;
+            EnemyExitVision += () => CurrentState = PreviousState;
+            FlagEnter += SpottedFlag;
+            FlagExit += LostSightOffFlag;
+            PowerUpEnterVision += DetectedPowerUP;
+            BallDetected += SawBall;
 
         }
-
 
         private void OnDisable()
         {
 
             CaptureTheFlag.Instance.FlagPickedUp -= FlagPickedUp;
+            CaptureTheFlag.Instance.FlagDropped -= FlagDropped;
+            CaptureTheFlag.Instance.FlagReturned -= FlagReturned;
+            CaptureTheFlag.Instance.FlagCaptured -= FlagCaptured;
             MyFlagCarrier.Pickup -= GotFlag;
+            MyFlagCarrier.Drop -= () => HasFlag = false;
+            MyFlagCarrier.Capture -= () => HasFlag = false;
+            EnemyEnterVision -= () => CurrentState = States_Simon.AttackState;
+            EnemyExitVision -= () => CurrentState = PreviousState;
+            FlagEnter -= SpottedFlag;
+            FlagExit -= LostSightOffFlag;
+            PowerUpEnterVision -= DetectedPowerUP;
+            BallDetected -= SawBall;
 
         }
 
@@ -92,38 +142,69 @@ namespace Simon.AI
         protected override void ExecuteAI()
         {
 
-            if (pickingUpFlag)
-                NavMeshAgent.isStopped = true;
+            if (activeState != null)
+                activeState.Update(this);
+            else
+                CurrentState = States_Simon.RoamState;
 
-            isAttacking = Attack();
+            //if (PickingUpFlag)
+            //    NavMeshAgent.isStopped = true;
 
-            if (!isAttacking)
-                isGettingFlag = GetFlag();
+            //if (!IsAttacking)
+            //    isGettingFlag = GetFlag();
 
-            //if (!isAttacking && !isGettingFlag)
+            //if (&& !isGettingFlag)
             //    isGettingPowerUp = GetPowerUps();
 
-            if (!isAttacking && !isGettingFlag && !isGettingPowerUp)
-                DoThisInstead();
+            //if (!IsGettingFlag && !IsGettingPowerUp)
+            //    DoThisInstead();
 
         }
-
-
-        private void DoThisInstead()
+        private void FlagPickedUp(Team team)
         {
 
-            NavMeshAgent.isStopped = false;
-
-            if (HasReachedDestination())
+            if (team != MyDetectable.TeamID)
             {
-
-                currentDestination = PickRandomDestination();
-                MoveTo(currentDestination);
 
             }
 
         }
 
+        private void SpottedFlag(Team id)
+        {
+
+        }
+
+        private void SawBall(Ball ball)
+        {
+
+        }
+
+        private void LostSightOffFlag(Team id)
+        {
+
+        }
+
+
+        private void FlagDropped(Team id)
+        {
+
+        }
+
+        private void FlagReturned(Team id)
+        {
+
+        }
+
+        private void FlagCaptured(Team id)
+        {
+
+        }
+
+        private void DetectedPowerUP()
+        {
+
+        }
 
         private bool GetPowerUps()
         {
@@ -132,7 +213,7 @@ namespace Simon.AI
             float maxDistance = 1000;
             Vector3 newDestination = Vector3.zero;
 
-            if (powerUps.Count > 0) 
+            if (powerUps.Count > 0)
                 foreach (var power in powerUps)
                 {
                     float distance = Vector3.Distance(gameObject.transform.position, power.Position);
@@ -140,14 +221,14 @@ namespace Simon.AI
                     {
                         newDestination = power.Position;
                         maxDistance = distance;
-                        targetPowerUp = power;
+                        TargetPowerUp = power;
                     }
                 }
 
             if (newDestination != Vector3.zero)
             {
                 NavMeshAgent.isStopped = false;
-                currentDestination = newDestination;
+                CurrentDestination = newDestination;
                 MoveTo(newDestination);
                 return true;
             }
@@ -174,9 +255,9 @@ namespace Simon.AI
                     else
                     {
                         Debug.Log("Enemy flag detected");
-                        currentDestination = flag.Position;
-                        MoveTo(currentDestination);
-                        foundFlag = true;
+                        CurrentDestination = flag.Position;
+                        MoveTo(CurrentDestination);
+                        FoundFlag = true;
                         return true;
                     }
                 }
@@ -186,97 +267,37 @@ namespace Simon.AI
 
         }
 
-        private bool Attack()
-        {
-
-            if (GetVisibleEnemiesSnapshot().Count > 0)
-            {
-                NavMeshAgent.isStopped = true;
-                RefreshOrAcquireTarget();
-                if (TryGetTarget(out PerceivedAgent target))
-                {
-                    FaceTarget(target.Position);
-                    ThrowBallAt(target);
-                    return true;
-                }
-
-                return false;
-
-            }
-            else
-            {
-
-                return false;
-
-            }
-
-        }
-
-        /// <summary>
-        /// Picks a random destination that the AI can walk to using NavMesh.
-        /// </summary>
-        /// <returns>A random walkable position, or the current position if no valid destination found</returns>
-        private Vector3 PickRandomDestination()
-        {
-
-            Vector3 currentPosition = transform.position;
-
-            for (int attempt = 0; attempt < maxAttempts; attempt++)
-            {
-                // Generate a random direction
-                Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
-                randomDirection += currentPosition;
-
-                // Try to find a valid NavMesh position near the random point
-                if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas))
-                {
-                    // Additional check: make sure we can actually path to this destination
-                    NavMeshPath path = new NavMeshPath();
-                    if (NavMesh.CalculatePath(currentPosition, hit.position, NavMesh.AllAreas, path))
-                    {
-                        if (path.status == NavMeshPathStatus.PathComplete)
-                        {
-                            return hit.position;
-                        }
-                    }
-                }
-            }
-
-            return currentPosition;
-
-        }
-
         /// <summary>
         /// Checks if we have arrived at our destination
         /// </summary>
         /// <returns>true if we have arrived</returns>
-        private bool HasReachedDestination()
+        public bool HasReachedDestination()
         {
 
-            if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && foundFlag)
+            if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && FoundFlag)
             {
 
-                if (!pickingUpFlag)
+                if (!PickingUpFlag)
                 {
 
-                    pickingUpFlag = true;
+                    PickingUpFlag = true;
                     StartCoroutine(PickupFlag());
 
                 }
 
             }
-            else if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && !foundFlag)
+            else if (NavMeshAgent.remainingDistance <= ARRIVAL_THRESHOLD && !FoundFlag)
             {
 
                 //TryConsumePowerup(targetPowerUp.Id);
-                
-                if (hasFlag)
-                    hasFlag = false;
+
+                if (HasFlag)
+                    HasFlag = false;
 
                 return true;
 
             }
-            else if (!NavMeshAgent.pathPending && !NavMeshAgent.hasPath && Vector3.Distance(transform.position, currentDestination) <= ARRIVAL_THRESHOLD)
+            else if (!NavMeshAgent.pathPending && !NavMeshAgent.hasPath && Vector3.Distance(transform.position, CurrentDestination) <= ARRIVAL_THRESHOLD)
             {
 
                 return true;
@@ -293,8 +314,8 @@ namespace Simon.AI
 
             yield return new WaitForSeconds(pickupTimer);
 
-            foundFlag = false;
-            pickingUpFlag = false;
+            FoundFlag = false;
+            PickingUpFlag = false;
 
         }
 
@@ -302,22 +323,52 @@ namespace Simon.AI
         private void GotFlag()
         {
 
-            hasFlag = true;
+            HasFlag = true;
             Vector3? flagPosition = CaptureTheFlag.Instance.GetOwnFlagPosition(this);
-            currentDestination = flagPosition.Value;
+            CurrentDestination = flagPosition.Value;
             NavMeshAgent.isStopped = false;
-            MoveTo(currentDestination);
+            MoveTo(CurrentDestination);
 
         }
 
 
-        private void FlagPickedUp(Team team)
+
+
+        private void AddNewState(States_Simon state)
         {
 
-            if (team != MyDetectable.TeamID)
+            IState_Simon<Simon_AI_Test> newState = null;
+
+            switch (state)
             {
-                
+                case States_Simon.AttackState:
+                    newState = new AttackState();
+                    break;
+                case States_Simon.RoamState:
+                    newState = new RoamState();
+                    break;
+                case States_Simon.DodgeState:
+                    newState = new DodgeState();
+                    break;
+                case States_Simon.CaptureFlagState:
+                    newState = new CaptureFlagState();
+                    break;
+                case States_Simon.SaveFlagState:
+                    newState = new SaveFlagState();
+                    break;
+                case States_Simon.GetPowerUpState:
+                    newState = new GetPowerUpState();
+                    break;
             }
+
+            if (newState == null)
+            {
+                Debug.Log("Missing state reference");
+                return;
+            }
+
+            states.TryAdd(state, newState);
+            activeState = newState;
 
         }
 
