@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "com.dania.aigame.agent.example": {
-      "version": "file:C:/Users/oblit/Desktop/Forløb/Kunstig Intelligens/com.dania.aigame.agent.example-main/com.dania.aigame.agent.example-main",
+      "version": "file:D:/Assets/com.dania.aigame.agent.example-main/com.dania.aigame.agent.example-main",
       "depth": 0,
       "source": "local",
       "dependencies": {}
     },
     "com.dania.aigame.core": {
-      "version": "file:C:/Users/oblit/Desktop/Forløb/Kunstig Intelligens/com.dania.aigame.core-main/com.dania.aigame.core-main",
+      "version": "file:D:/Assets/com.dania.aigame.core-main/com.dania.aigame.core-main",
       "depth": 0,
       "source": "local",
       "dependencies": {}

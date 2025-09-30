@@ -17,7 +17,7 @@ namespace Simon.AI
         /// <returns>An array containing the AI types to spawn.</returns>
         protected override System.Type[] GetAgentTypes()
         {
-            return new System.Type[] { typeof(Simon_AI_Test) };
+            return new System.Type[] { typeof(Simon_AI) };
         }
     }
 }

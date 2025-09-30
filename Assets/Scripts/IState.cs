@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IState_Simon<T>
+public interface IState<T>
 {
     public abstract void Enter(T obj);
 
