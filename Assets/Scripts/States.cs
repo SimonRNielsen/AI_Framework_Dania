@@ -133,7 +133,25 @@ public class DodgeState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        obj.StartDodge(_ = Random.Range(0, 2) == 1 ? Vector3.left : Vector3.right);
+        Vector3 random = Vector3.zero;
+
+        switch (Random.Range(0, 4))
+        {
+            case 0:
+                random = Vector3.back;
+                break;
+            case 1: 
+                random = Vector3.forward; 
+                break;
+            case 2:
+                random = Vector3.left;
+                break;
+            case 3:
+                random = Vector3.right;
+                break;
+        }
+
+        obj.StartDodge(random);
         //Debug.Log("DodgeState Enter Ran");
 
     }

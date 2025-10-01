@@ -32,7 +32,7 @@ namespace Simon.AI
     {
 
         private const float ARRIVAL_THRESHOLD = 0.5f;
-        private const float incomingDot = 0.85f;
+        private const float incomingDot = 0.9f;
         private const float allowNewPowerUp = 0.45f;
         private States currentState = States.None;
         private Vector3 pointOfInterest;
@@ -335,7 +335,7 @@ namespace Simon.AI
             if (!NavMeshAgent.pathPending && !NavMeshAgent.hasPath && Vector3.Distance(transform.position, CurrentDestination) <= ARRIVAL_THRESHOLD)
             {
 
-                Debug.Log($"Reached Destination, currentstate is {currentState}");
+                //Debug.Log($"Reached Destination, currentstate is {currentState}");
                 return true;
 
             }
