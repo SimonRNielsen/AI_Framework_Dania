@@ -10,17 +10,17 @@ public class AttackState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("AttackState Enter Ran");
         obj.NavMeshAgent.isStopped = true;
+        //Debug.Log("AttackState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("AttackState Exit Ran");
         obj.NavMeshAgent.isStopped = false;
         obj.MoveTo(obj.CurrentDestination);
+        //Debug.Log("AttackState Exit Ran");
 
     }
 
@@ -61,22 +61,21 @@ public class RoamState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("RoamState Enter Ran");
+        if (obj.NavMeshAgent.isStopped)
+            obj.NavMeshAgent.isStopped = false;
+        //Debug.Log("RoamState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("RoamState Exit Ran");
+        //Debug.Log("RoamState Exit Ran");
 
     }
 
     public void Update(Simon_AI obj)
     {
-
-        if (obj.NavMeshAgent.isStopped)
-            obj.NavMeshAgent.isStopped = false;
 
         if (obj.HasReachedDestination())
         {
@@ -89,11 +88,10 @@ public class RoamState : IState<Simon_AI>
         if (obj.OwnFlagCarried)
         {
 
-            obj.StateBeforeFlagCapture = States.Roam;
+            obj.StateBeforeFlagCapture = obj.CurrentState;
             obj.CurrentState = States.SaveFlag;
 
         }
-
 
     }
 
@@ -135,17 +133,17 @@ public class DodgeState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("DodgeState Enter Ran");
-        obj.StartDodge(Random.Range(0, 2) == 1 ? Vector3.left : Vector3.right);
+        obj.StartDodge(_ = Random.Range(0, 2) == 1 ? Vector3.left : Vector3.right);
+        //Debug.Log("DodgeState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("DodgeState Exit Ran");
         if (obj.PreviousState == States.CaptureFlag && obj.PointOfInterest != Vector3.zero)
             obj.FaceTarget(obj.PointOfInterest);
+        //Debug.Log("DodgeState Exit Ran");
 
     }
 
@@ -165,17 +163,17 @@ public class CaptureFlagState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("CaptureFlagState Enter Ran");
         Vector3? flagLocation = CaptureTheFlag.Instance.GetOwnFlagPosition(obj);
         obj.CurrentDestination = flagLocation.Value;
         obj.MoveTo(obj.CurrentDestination);
+        //Debug.Log("CaptureFlagState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("CaptureFlagState Exit Ran");
+        //Debug.Log("CaptureFlagState Exit Ran");
 
     }
 
@@ -195,17 +193,18 @@ public class SaveFlagState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("SaveFlagState Enter Ran");
-        Vector3? flagLocation = CaptureTheFlag.Instance.GetOwnFlagPosition(obj);
-        obj.CurrentDestination = flagLocation.Value;
-        obj.MoveTo(obj.CurrentDestination);
+        if (obj.NavMeshAgent.isStopped)
+            obj.NavMeshAgent.isStopped = false;
+
+        GoToOwnFlag(obj);
+        //Debug.Log("SaveFlagState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("SaveFlagState Exit Ran");
+        //Debug.Log("SaveFlagState Exit Ran");
 
     }
 
@@ -213,10 +212,19 @@ public class SaveFlagState : IState<Simon_AI>
     {
 
         if (obj.HasReachedDestination())
-            Enter(obj);
+            GoToOwnFlag(obj);
 
         if (!obj.OwnFlagCarried)
             obj.CurrentState = obj.StateBeforeFlagCapture;
+
+    }
+
+    private void GoToOwnFlag(Simon_AI obj)
+    {
+
+        Vector3? flagLocation = CaptureTheFlag.Instance.GetOwnFlagPosition(obj);
+        obj.CurrentDestination = flagLocation.Value;
+        obj.MoveTo(obj.CurrentDestination);
 
     }
 
@@ -228,7 +236,6 @@ public class GetPowerUpState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("GetPowerUpState Enter Ran");
         var powerUps = obj.GetVisiblePowerUpsSnapshot();
         float maxDistance = 1000;
         Vector3 newDestination = Vector3.zero;
@@ -253,21 +260,22 @@ public class GetPowerUpState : IState<Simon_AI>
             obj.MoveTo(newDestination);
 
         }
+        //Debug.Log("GetPowerUpState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("GetPowerUpState Exit Ran");
         if (obj.TryConsumePowerupAction?.Invoke(obj.TargetPowerUp.Id) ?? false)
         {
 
             obj.TimeSinceLastPowerUp = 0;
-            Simon_AI.CheckOthersTargetPowerUp?.Invoke(obj.TargetPowerUp.Id, obj.AgentID);
+            Simon_AI.ClaimedTargetPowerUp?.Invoke(obj.TargetPowerUp.Id, obj.AgentID);
 
         }
         obj.IsGettingPowerUp = false;
+        //Debug.Log("GetPowerUpState Exit Ran");
 
     }
 
@@ -286,7 +294,6 @@ public class GetFlagState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("GetFlagState Enter Ran");
         var detectFlag = obj.GetVisibleFlagsSnapShot();
 
         if (detectFlag.Count > 0)
@@ -300,24 +307,25 @@ public class GetFlagState : IState<Simon_AI>
 
                     obj.CurrentDestination = flag.Position;
                     obj.MoveTo(obj.CurrentDestination);
-                    Debug.Log("Enemy flag detected");
+                    //Debug.Log("Enemy flag detected");
 
                 }
-                else
-                    Debug.Log("Own flag detected");
+                //else
+                    //Debug.Log("Own flag detected");
 
             }
 
         }
+        //Debug.Log("GetFlagState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("GetFlagState Exit Ran");
         obj.NavMeshAgent.isStopped = false;
         obj.MoveTo(obj.CurrentDestination);
+        //Debug.Log("GetFlagState Exit Ran");
 
     }
 
@@ -374,23 +382,23 @@ public class CheckDirectionState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        Debug.Log("CheckDirectionState Enter Ran");
         obj.NavMeshAgent.isStopped = true;
 
         if (obj.PointOfInterest != Vector3.zero)
             obj.FaceTarget(obj.PointOfInterest);
 
         obj.CheckedFor = 0f;
+        //Debug.Log("CheckDirectionState Enter Ran");
 
     }
 
     public void Exit(Simon_AI obj)
     {
 
-        Debug.Log("CheckDirectionState Exit Ran");
         obj.NavMeshAgent.isStopped = false;
         obj.MoveTo(obj.CurrentDestination);
         obj.PointOfInterest = Vector3.zero;
+        //Debug.Log("CheckDirectionState Exit Ran");
 
     }
 

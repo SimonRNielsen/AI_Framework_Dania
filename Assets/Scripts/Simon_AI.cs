@@ -32,11 +32,9 @@ namespace Simon.AI
     {
 
         private const float ARRIVAL_THRESHOLD = 0.5f;
-        private const float pickupTimer = 4f;
         private const float incomingDot = 0.85f;
         private const float allowNewPowerUp = 0.45f;
         private States currentState = States.None;
-        private Vector3 incomingBallDirection;
         private Vector3 pointOfInterest;
         private IState<Simon_AI> activeState;
         private static Dictionary<States, IState<Simon_AI>> states = new Dictionary<States, IState<Simon_AI>>();
@@ -44,16 +42,15 @@ namespace Simon.AI
         private List<Ball> checkedBalls = new List<Ball>();
 
         public Func<int, bool> TryConsumePowerupAction;
-        public static Action<int, int> CheckOthersTargetPowerUp;
+        public static Action<int, int> ClaimedTargetPowerUp;
         public Vector3 CurrentDestination;
         public PerceivedPowerUp TargetPowerUp;
 
-        public Vector3 IncomingBallDirection { get => incomingBallDirection; }
         public Vector3 PointOfInterest { get => pointOfInterest; set => pointOfInterest = value; }
 
         public States PreviousState { get; set; } = States.Roam;
 
-        public States StateBeforeFlagCapture { get; set; }
+        public States StateBeforeFlagCapture { get; set; } = States.Roam;
 
         public float CheckedFor { get; set; } = 0f;
 
@@ -63,11 +60,7 @@ namespace Simon.AI
 
         public bool IsGettingPowerUp { get; set; } = false;
 
-        public bool IsGettingFlag { get; set; } = false;
-
         public bool FoundFlag { get; set; } = false;
-
-        public bool PickingUpFlag { get; set; } = false;
 
         public bool HasFlag { get; set; } = false;
 
@@ -138,7 +131,7 @@ namespace Simon.AI
             CaptureTheFlag.Instance.FlagDropped += FlagDropped;
             CaptureTheFlag.Instance.FlagReturned += FlagReturned;
             CaptureTheFlag.Instance.FlagCaptured += FlagCaptured;
-            CheckOthersTargetPowerUp += AbandonPowerUp;
+            ClaimedTargetPowerUp += AbandonPowerUp;
             TryConsumePowerupAction += (id) => TryConsumePowerup(id);
             MyFlagCarrier.Pickup += () => HasFlag = true;
             MyFlagCarrier.Drop += () => HasFlag = false;
@@ -163,7 +156,7 @@ namespace Simon.AI
             CaptureTheFlag.Instance.FlagDropped -= FlagDropped;
             CaptureTheFlag.Instance.FlagReturned -= FlagReturned;
             CaptureTheFlag.Instance.FlagCaptured -= FlagCaptured;
-            CheckOthersTargetPowerUp -= AbandonPowerUp;
+            ClaimedTargetPowerUp -= AbandonPowerUp;
             TryConsumePowerupAction -= (id) => TryConsumePowerup(id);
             MyFlagCarrier.Pickup -= () => HasFlag = true;
             MyFlagCarrier.Drop -= () => HasFlag = false;
@@ -267,7 +260,6 @@ namespace Simon.AI
                 {
 
                     CurrentState = States.Dodge;
-                    incomingBallDirection = ballDirection;
                     return;
 
                 }
@@ -358,8 +350,10 @@ namespace Simon.AI
             if (agentID == AgentID) return;
             if (id == TargetPowerUp.Id && CurrentState == States.GetPowerUp)
             {
+
                 CurrentState = PreviousState;
                 IsGettingPowerUp = false;
+
             }
 
         }
@@ -372,28 +366,28 @@ namespace Simon.AI
 
             switch (state)
             {
-                case States.Attack: //Done
+                case States.Attack:
                     newState = new AttackState();
                     break;
-                case States.Roam: //Done
+                case States.Roam:
                     newState = new RoamState();
                     break;
-                case States.Dodge: //Done
+                case States.Dodge:
                     newState = new DodgeState();
                     break;
-                case States.CaptureFlag: //Done
+                case States.CaptureFlag:
                     newState = new CaptureFlagState();
                     break;
                 case States.SaveFlag:
                     newState = new SaveFlagState();
                     break;
-                case States.GetPowerUp: //Done
+                case States.GetPowerUp:
                     newState = new GetPowerUpState();
                     break;
-                case States.GetFlag: //Done
+                case States.GetFlag:
                     newState = new GetFlagState();
                     break;
-                case States.CheckDirection: //Done
+                case States.CheckDirection:
                     newState = new CheckDirectionState();
                     break;
             }
