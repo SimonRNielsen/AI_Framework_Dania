@@ -348,10 +348,18 @@ namespace Simon.AI
         {
 
             if (agentID == AgentID) return;
+
             if (id == TargetPowerUp.Id && CurrentState == States.GetPowerUp)
             {
 
                 CurrentState = PreviousState;
+                IsGettingPowerUp = false;
+
+            }
+            else if (id == TargetPowerUp.Id && PreviousState == States.GetPowerUp)
+            {
+
+                PreviousState = States.Roam;
                 IsGettingPowerUp = false;
 
             }
