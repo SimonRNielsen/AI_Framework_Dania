@@ -46,7 +46,7 @@ public class Blackboard
     public T GetValue<T>(string key)
     {
 
-        if (data.TryGetValue(key, out object result) && result is T typedResult) return typedResult;
+        if (data.TryGetValue(key, out object result) && result is T type) return type;
 
         return default;
 

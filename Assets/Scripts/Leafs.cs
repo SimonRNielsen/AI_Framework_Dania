@@ -26,12 +26,11 @@ public class IsEnemyVisible : Node
 
             ai.RefreshOrAcquireTarget();
 
-            var blackboard = Blackboard.GetShared(ai);
             if (blackboard != null)
             {
 
-                blackboard.SetValue(enemyPosition, enemies[0].Position);
-                blackboard.SetValue(enemyTime, Time.time);
+                blackboard.SetValue(ai.MyDetectable.TeamID + enemyPosition, enemies[0].Position);
+                blackboard.SetValue(ai.MyDetectable.TeamID + enemyTime, Time.time);
 
             }
 
@@ -97,16 +96,16 @@ public class InvestigateLastSeenEnemy : Node
         {
 
             // Check if we have recent enemy intel using generic methods
-            if (blackboard.HasKey(IsEnemyVisible.enemyPosition) && blackboard.HasKey(IsEnemyVisible.enemyTime))
+            if (blackboard.HasKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyPosition) && blackboard.HasKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyTime))
             {
 
-                float lastSeenTime = blackboard.GetValue<float>(IsEnemyVisible.enemyTime);
+                float lastSeenTime = blackboard.GetValue<float>(ai.MyDetectable.TeamID + IsEnemyVisible.enemyTime);
 
                 // Only investigate if intel is recent (within 10 seconds)
                 if (Time.time - lastSeenTime < 10f)
                 {
 
-                    Vector3 lastSeenPosition = blackboard.GetValue<Vector3>(IsEnemyVisible.enemyPosition);
+                    Vector3 lastSeenPosition = blackboard.GetValue<Vector3>(ai.MyDetectable.TeamID + IsEnemyVisible.enemyPosition);
                     ai.MoveTo(lastSeenPosition);
 
                     return NodeState.Success;
@@ -116,8 +115,8 @@ public class InvestigateLastSeenEnemy : Node
                 {
 
                     // Clean up old data using generic methods
-                    blackboard.RemoveKey(IsEnemyVisible.enemyPosition);
-                    blackboard.RemoveKey(IsEnemyVisible.enemyTime);
+                    blackboard.RemoveKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyPosition);
+                    blackboard.RemoveKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyTime);
 
                 }
 
