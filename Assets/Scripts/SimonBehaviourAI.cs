@@ -1,0 +1,70 @@
+using AIGame.Core;
+using UnityEngine;
+using UnityEngine.AI;
+
+namespace Simon.AI
+{
+    /// <summary>
+    /// SimonBehaviourAI AI implementation.
+    /// TODO: Describe your AI strategy here.
+    /// </summary>
+    public class SimonBehaviourAI : BaseAI
+    {
+
+        private Tree behaviourTree;
+        private Blackboard blackboard;
+
+        /// <summary>
+        /// Configure the agent's stats (speed, health, etc.).
+        /// </summary>
+        protected override void ConfigureStats()
+        {
+
+            AllocateStat(StatType.Speed, 3);
+            AllocateStat(StatType.VisionRange, 7);
+            AllocateStat(StatType.ProjectileRange, 7);
+            AllocateStat(StatType.ReloadSpeed, 1);
+            AllocateStat(StatType.DodgeCooldown, 2);
+
+        }
+
+        /// <summary>
+        /// Called once when the agent starts.
+        /// Use this for initialization.
+        /// </summary>
+        protected override void StartAI()
+        {
+
+            blackboard = Blackboard.GetShared(this);
+
+            Sequence combatSequence = new Sequence(blackboard);
+            combatSequence.children.Add(new IsEnemyVisible(blackboard, this));
+            combatSequence.children.Add(new AttackEnemy(blackboard, this));
+
+            InvestigateLastSeenEnemy investigateLastSeenEnemy = new InvestigateLastSeenEnemy(blackboard, this);
+
+            MoveToPoint moveToPoint = new MoveToPoint(blackboard, this, transform.position);
+
+            Selector rootSelector = new Selector(blackboard);
+            rootSelector.children.Add(combatSequence);
+            rootSelector.children.Add(investigateLastSeenEnemy);
+            rootSelector.children.Add(moveToPoint);
+
+            behaviourTree = new Tree(rootSelector, blackboard);
+
+        }
+
+        /// <summary>
+        /// Called every frame to make decisions.
+        /// Implement your AI logic here.
+        /// </summary>
+        protected override void ExecuteAI()
+        {
+            
+            NodeState result = behaviourTree.Tick();
+
+        }
+
+    }
+
+}
