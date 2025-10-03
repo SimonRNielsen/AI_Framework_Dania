@@ -1,16 +1,18 @@
 {
   "dependencies": {
     "com.dania.aigame.agent.example": {
-      "version": "file:com.dania.aigame.agent.example-main",
+      "version": "https://github.com/DaniaGames/com.dania.aigame.agent.example.git",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "9d015a2b618be83ba92803efb83d3606c601ee1b"
     },
     "com.dania.aigame.core": {
-      "version": "file:com.dania.aigame.core-main",
+      "version": "https://github.com/DaniaGames/com.dania.aigame.core.git",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "428f7154fb62df3dcdeb6aa5a9935e24c3e438e9"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",

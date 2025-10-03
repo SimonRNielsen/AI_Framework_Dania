@@ -137,7 +137,7 @@ namespace Simon.AI
         private bool HasReachedDestination()
         {
 
-            if (!NavMeshAgent.pathPending && !NavMeshAgent.hasPath && Vector3.Distance(transform.position, currentDestination) <= ARRIVAL_THRESHOLD)
+            if (!IsPathPending() && !IsPathPending() && Vector3.Distance(transform.position, currentDestination) <= ARRIVAL_THRESHOLD)
             {
 
                 //Debug.Log($"Reached Destination, currentstate is {currentState}");

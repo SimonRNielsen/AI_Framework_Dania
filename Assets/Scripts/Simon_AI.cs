@@ -332,7 +332,7 @@ namespace Simon.AI
         public bool HasReachedDestination()
         {
 
-            if (!NavMeshAgent.pathPending && !NavMeshAgent.hasPath && Vector3.Distance(transform.position, CurrentDestination) <= ARRIVAL_THRESHOLD)
+            if (!IsPathPending() && !HasPath() && Vector3.Distance(transform.position, CurrentDestination) <= ARRIVAL_THRESHOLD)
             {
 
                 //Debug.Log($"Reached Destination, currentstate is {currentState}");

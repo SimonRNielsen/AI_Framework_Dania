@@ -10,7 +10,7 @@ public class AttackState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        obj.NavMeshAgent.isStopped = true;
+        obj.SetStopped(true);
         //Debug.Log("AttackState Enter Ran");
 
     }
@@ -18,7 +18,7 @@ public class AttackState : IState<Simon_AI>
     public void Exit(Simon_AI obj)
     {
 
-        obj.NavMeshAgent.isStopped = false;
+        obj.SetStopped(false);
         obj.MoveTo(obj.CurrentDestination);
         //Debug.Log("AttackState Exit Ran");
 
@@ -61,8 +61,8 @@ public class RoamState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        if (obj.NavMeshAgent.isStopped)
-            obj.NavMeshAgent.isStopped = false;
+        if (obj.IsStopped())
+            obj.SetStopped(false);
         //Debug.Log("RoamState Enter Ran");
 
     }
@@ -211,8 +211,8 @@ public class SaveFlagState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        if (obj.NavMeshAgent.isStopped)
-            obj.NavMeshAgent.isStopped = false;
+        if (obj.IsStopped())
+            obj.SetStopped(false);
 
         GoToOwnFlag(obj);
         //Debug.Log("SaveFlagState Enter Ran");
@@ -273,7 +273,7 @@ public class GetPowerUpState : IState<Simon_AI>
         if (newDestination != Vector3.zero)
         {
 
-            obj.NavMeshAgent.isStopped = false;
+            obj.SetStopped(false);
             obj.CurrentDestination = newDestination;
             obj.MoveTo(newDestination);
 
@@ -341,7 +341,7 @@ public class GetFlagState : IState<Simon_AI>
     public void Exit(Simon_AI obj)
     {
 
-        obj.NavMeshAgent.isStopped = false;
+        obj.SetStopped(false);
         obj.MoveTo(obj.CurrentDestination);
         //Debug.Log("GetFlagState Exit Ran");
 
@@ -357,7 +357,7 @@ public class GetFlagState : IState<Simon_AI>
             if (obj.TryGetTarget(out PerceivedAgent target))
             {
 
-                obj.NavMeshAgent.isStopped = true;
+                obj.SetStopped(true);
                 obj.FaceTarget(target.Position);
                 obj.ThrowBallAt(target);
                 obj.IsAttacking = true;
@@ -370,13 +370,13 @@ public class GetFlagState : IState<Simon_AI>
         else
         {
 
-            obj.NavMeshAgent.isStopped = false;
+            obj.SetStopped(false);
             obj.IsAttacking = false;
 
         }
 
         if (obj.HasReachedDestination())
-            obj.NavMeshAgent.isStopped = true;
+            obj.SetStopped(true);
 
         if (obj.EnemyFlagCarried && obj.HasFlag)
         {
@@ -400,7 +400,7 @@ public class CheckDirectionState : IState<Simon_AI>
     public void Enter(Simon_AI obj)
     {
 
-        obj.NavMeshAgent.isStopped = true;
+        obj.SetStopped(true);
 
         if (obj.PointOfInterest != Vector3.zero)
             obj.FaceTarget(obj.PointOfInterest);
@@ -413,7 +413,7 @@ public class CheckDirectionState : IState<Simon_AI>
     public void Exit(Simon_AI obj)
     {
 
-        obj.NavMeshAgent.isStopped = false;
+        obj.SetStopped(false);
         obj.MoveTo(obj.CurrentDestination);
         obj.PointOfInterest = Vector3.zero;
         //Debug.Log("CheckDirectionState Exit Ran");
