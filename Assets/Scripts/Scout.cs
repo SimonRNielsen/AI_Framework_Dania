@@ -40,7 +40,9 @@ namespace MortensKombat
         /// </summary>
         protected override void ExecuteAI()
         {
-            // TODO: Implement your AI decision-making logic here
+            
+            base.ExecuteAI();
+
         }
     }
 }

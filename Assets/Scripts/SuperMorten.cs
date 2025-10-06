@@ -11,14 +11,13 @@ namespace MortensKombat
     {
 
         protected MKBlackboard blackboard;
+        private const float SUPPLYDATA = 0.1f;
+        private float timeSinceDataUpdate = SUPPLYDATA;
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
-        protected override void ConfigureStats()
-        {
-            // TODO: Configure your agent's stats
-        }
+        protected override void ConfigureStats() { }
 
         /// <summary>
         /// Called once when the agent starts.
@@ -28,6 +27,14 @@ namespace MortensKombat
         {
 
             blackboard = MKBlackboard.GetShared(this);
+            FlagEnter += SpottedFlag;
+
+        }
+
+        private void OnDisable()
+        {
+
+            FlagEnter -= SpottedFlag;
 
         }
 
@@ -37,7 +44,43 @@ namespace MortensKombat
         /// </summary>
         protected override void ExecuteAI()
         {
-            // TODO: Implement your AI decision-making logic here
+
+            timeSinceDataUpdate += Time.deltaTime;
+            if (timeSinceDataUpdate >= SUPPLYDATA)
+            {
+
+                timeSinceDataUpdate = 0f;
+                SupplyData();
+
+            }
+
         }
+
+
+        private void SupplyData()
+        {
+
+            var enemies = GetVisibleEnemiesSnapshot();
+
+            if (enemies.Count > 0)
+                foreach (var enemy in enemies)
+                    blackboard.SetValue(MyDetectable.TeamID + blackboard.enemy, enemy);
+
+        }
+
+
+        private void SpottedFlag(Team id)
+        {
+
+            if (id == MyDetectable.TeamID || blackboard.HasKey(MyDetectable.TeamID + blackboard.flag)) return;
+
+            var flags = GetVisibleFlagsSnapShot();
+
+            if (flags.Count > 0)
+                foreach (var flag in flags)
+                    blackboard.SetValue(MyDetectable.TeamID + blackboard.flag, flag);
+
+        }
+
     }
 }

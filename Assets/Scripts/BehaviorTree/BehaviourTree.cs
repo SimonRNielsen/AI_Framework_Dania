@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AIGame.Core;
 using Simon.AI;
 using MortensKombat;
+using System.Linq;
 
 
 public enum NodeState
@@ -19,8 +20,8 @@ public class MKBlackboard
 {
 
     private static MKBlackboard sharedInstance;
-    public readonly string enemy = "enemy";
-    public readonly string flag = "flag";
+    public readonly string enemy = "enemyAgent";
+    public readonly string flag = "enemyFlag";
     private Dictionary<string, object> data = new Dictionary<string, object>();
 
     private MKBlackboard() { }
@@ -43,17 +44,45 @@ public class MKBlackboard
     }
 
 
-    public void SetValue<T>(string key, T value) => data[key] = value;
+    public void SetValue<T>(string key, T value)
+    {
+
+        if (value is PerceivedAgent enemy)
+        {
+
+            if (data.TryGetValue(key + enemy.Id, out object result) && result is EnemyData enemyData)
+            {
+
+                enemyData.position = enemy.Position;
+                enemyData.timestamp = Time.time;
+
+            }
+            else
+                data[key + enemy.Id] = new EnemyData(enemy.Position, enemy.Id, Time.time);
+
+            return;
+
+        }
+
+        data[key] = value;
+
+    }
+
 
 
     public T GetValue<T>(string key) => data.TryGetValue(key, out object result) && result is T type ? type : default;
-    /*{
 
-        if (data.TryGetValue(key, out object result) && result is T type) return type;
 
-        return default;
+    public List<EnemyData> GetEnemies()
+    {
 
-    }*/
+        List<EnemyData> values = new List<EnemyData>();
+
+        values = data.Values.Where(x => x is EnemyData).ToList().ConvertAll(x => (EnemyData)x);
+
+        return values;
+
+    }
 
 
     public bool HasKey(string key) => data.ContainsKey(key);
@@ -144,5 +173,24 @@ public class Sequence : Node
         return NodeState.Success;
 
     }
+
+}
+
+
+public class EnemyData
+{
+
+    public EnemyData(Vector3 pos, int enemyID, float time)
+    {
+
+        position = pos;
+        id = enemyID;
+        timestamp = time;
+
+    }
+
+    public float timestamp;
+    public Vector3 position;
+    public int id;
 
 }
