@@ -1,7 +1,8 @@
-using UnityEngine;
 using AIGame.Core;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using static UnityEditor.VersionControl.Asset;
 
 namespace MortensKombat
 {
@@ -14,6 +15,7 @@ namespace MortensKombat
 
         protected MKBlackboard blackboard;
         private readonly float SUPPLYDATA = 0.1f;                           //Timer for renewing data
+        private readonly float INCOMINGDOT = 0.89f;                         //Dot value for close to directly towards this
         private float timeSinceDataUpdate;
         private static Action<Vector3, Vector3, Team> BallDetectedVector;   //Transmits data to teammembers
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
@@ -108,31 +110,35 @@ namespace MortensKombat
 
             if (!ball.Armed || ballsHandled.Contains(ball)) return; //Early return if ball isn't dangerous or already been processed
 
+            Vector3 ballFlyingInDirection = (ball.transform.position - ball.Parent.transform.position).normalized;
+
             ballsHandled.Add(ball); //Flags ball as processed
 
-            Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
-
-            if (rigidbody != null)
-                BallDetectedVector?.Invoke(rigidbody.linearVelocity, rigidbody.position, MyDetectable.TeamID); //Transmits relevant data to teammembers
+            BallDetectedVector?.Invoke(ballFlyingInDirection, ball.transform.position, MyDetectable.TeamID); //Transmits relevant data to teammembers
 
         }
 
         /// <summary>
         /// Supplies relevant data to all subscribers to check if they need to initiate a dodge, and if yes, starts dodging
         /// </summary>
-        /// <param name="ballRigidbodyVelocity">Velocity of triggering ball</param>
-        /// <param name="ballRigidbodyPosition">Position of triggering ball</param>
+        /// <param name="ballVelocity">Velocity of triggering ball</param>
+        /// <param name="ballOrigin">Position of thrower</param>
         /// <param name="id">Team that needs to beware</param>
-        private void IsBallIncoming(Vector3 ballRigidbodyVelocity, Vector3 ballRigidbodyPosition, Team id)
+        private void IsBallIncoming(Vector3 ballVelocity, Vector3 ballOrigin, Team id)
         {
 
-            if (!CanDodge() || id != MyDetectable.TeamID) return; //Early return if unable to dodge (or unnecessary because it's own teams ball)
+            if (!CanDodge() || id != MyDetectable.TeamID) return;                                                                                                                       //Early return if unable to dodge (or unnecessary because it's own teams ball)
 
+            Vector3 fromOriginToThis = (transform.position - ballOrigin).normalized;                                                                                                    //Calculate velocity normalized compared to this
+            float dot = Vector3.Dot(ballVelocity, fromOriginToThis);                                                                                                                    //Determine Dot value of direction required to hit this, and balls direction
 
+            Debug.Log($"Dot value for {MyName} was: {dot}"); //Debugging and Testing
 
-            Vector3 horizontalVelocity = new Vector3(ballRigidbodyVelocity.x, 0f, ballRigidbodyVelocity.z); //Get only horizontal values
-            horizontalVelocity.Normalize(); //Normalize for direction
-            StartDodge(UnityEngine.Random.value < 0.5f ? new Vector3(horizontalVelocity.z, 0f, -horizontalVelocity.x) : new Vector3(-horizontalVelocity.z, 0f, horizontalVelocity.x)); //Randomize dodge to direct left or right of incoming ball
+            if (dot < INCOMINGDOT) return;                                                                                                                                              //Early return if ball not deemed to hit
+
+            Vector3 horizontalVelocity = new Vector3(ballVelocity.x, 0f, ballVelocity.z);                                                                                               //Get only horizontal values
+            horizontalVelocity.Normalize();                                                                                                                                             //Normalize for direction
+            StartDodge(UnityEngine.Random.value < 0.5f ? new Vector3(horizontalVelocity.z, 0f, -horizontalVelocity.x) : new Vector3(-horizontalVelocity.z, 0f, horizontalVelocity.x));  //Randomize dodge to direct left or right of incoming ball
 
         }
 
@@ -153,7 +159,7 @@ namespace MortensKombat
                 default:
                     return "SuperMorten";
             }
-            
+
         }
 
         public override string ToString() => "SuperMorten";

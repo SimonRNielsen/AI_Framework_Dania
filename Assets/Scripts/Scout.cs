@@ -44,5 +44,9 @@ namespace MortensKombat
             base.ExecuteAI();
 
         }
+
+
+        public override string ToString() => "Scout";
+
     }
 }
