@@ -25,7 +25,7 @@ public class Blackboard
     public static Blackboard GetShared(BaseAI caller)
     {
 
-        if (caller is SimonBehaviourAI)
+        if (caller is BehaviourAITest)
         {
 
             if (sharedInstance == null)
@@ -43,14 +43,14 @@ public class Blackboard
     public void SetValue<T>(string key, T value) => data[key] = value;
 
 
-    public T GetValue<T>(string key)
-    {
+    public T GetValue<T>(string key) => data.TryGetValue(key, out object result) && result is T type ? type : default;
+    /*{
 
         if (data.TryGetValue(key, out object result) && result is T type) return type;
 
         return default;
 
-    }
+    }*/
 
 
     public bool HasKey(string key) => data.ContainsKey(key);

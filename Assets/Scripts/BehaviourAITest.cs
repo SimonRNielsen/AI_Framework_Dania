@@ -8,7 +8,7 @@ namespace Simon.AI
     /// SimonBehaviourAI AI implementation.
     /// TODO: Describe your AI strategy here.
     /// </summary>
-    public class SimonBehaviourAI : BaseAI
+    public class BehaviourAITest : BaseAI
     {
 
         private Tree behaviourTree;
