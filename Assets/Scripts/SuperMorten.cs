@@ -38,7 +38,7 @@ namespace MortensKombat
             FlagEnter += SpottedFlag;                   //Records data on enemy flag
             BallDetected += IsBallArmedAndNotHandled;   //Dataprocessing method that invokes BallDetectedVector if ball is dangerous
             BallDetectedVector += IsBallIncoming;       //Transmits data to all teammembers
-
+            
             timeSinceDataUpdate = SUPPLYDATA;           //Instant update on Execute
 
         }

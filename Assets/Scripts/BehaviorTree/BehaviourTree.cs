@@ -69,12 +69,15 @@ public class MKBlackboard
             if (data.TryGetValue(key + enemy.Id, out object result) && result is EnemyData enemyData)
             {
 
+                if (enemyData.recordedFrame >= enemy.Frame) return;
+
                 enemyData.position = enemy.Position;
                 enemyData.timestamp = Time.time;
+                enemyData.recordedFrame = enemy.Frame;
 
             }
             else
-                data[key + enemy.Id] = new EnemyData(enemy.Position, enemy.Id, Time.time);
+                data[key + enemy.Id] = new EnemyData(enemy.Position, enemy.Id, Time.time, enemy.Frame);
 
             return;
 
@@ -203,17 +206,19 @@ public class Sequence : Node
 public class EnemyData
 {
 
-    public EnemyData(Vector3 pos, int enemyID, float time)
+    public Vector3 position;
+    public float timestamp;
+    public int id;
+    public int recordedFrame;
+
+    public EnemyData(Vector3 pos, int enemyID, float time, int frame)
     {
 
         position = pos;
         id = enemyID;
         timestamp = time;
+        recordedFrame = frame;
 
     }
-
-    public float timestamp;
-    public Vector3 position;
-    public int id;
 
 }
