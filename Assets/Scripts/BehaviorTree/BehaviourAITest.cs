@@ -12,7 +12,7 @@ namespace Simon.AI
     {
 
         private Tree behaviourTree;
-        private Blackboard blackboard;
+        private MKBlackboard blackboard;
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -35,7 +35,7 @@ namespace Simon.AI
         protected override void StartAI()
         {
 
-            blackboard = Blackboard.GetShared(this);
+            blackboard = MKBlackboard.GetShared(this);
 
             Sequence combatSequence = new Sequence(blackboard);
             combatSequence.children.Add(new IsEnemyVisible(blackboard, this));

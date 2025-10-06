@@ -10,7 +10,7 @@ public class IsEnemyVisible : Node
     public const string enemyPosition = "LastSeenEnemyPosition";
     public const string enemyTime = "LastSeenEnemyTime";
 
-    public IsEnemyVisible(Blackboard blackboard, BaseAI ai) : base(blackboard)
+    public IsEnemyVisible(MKBlackboard blackboard, BaseAI ai) : base(blackboard)
     {
 
         this.ai = ai;
@@ -50,7 +50,7 @@ public class AttackEnemy : Node
 
     private BaseAI ai;
 
-    public AttackEnemy(Blackboard blackboard, BaseAI ai) : base(blackboard)
+    public AttackEnemy(MKBlackboard blackboard, BaseAI ai) : base(blackboard)
     {
 
         this.ai = ai;
@@ -81,7 +81,7 @@ public class InvestigateLastSeenEnemy : Node
 
     private BaseAI ai;
 
-    public InvestigateLastSeenEnemy(Blackboard blackboard, BaseAI ai) : base(blackboard)
+    public InvestigateLastSeenEnemy(MKBlackboard blackboard, BaseAI ai) : base(blackboard)
     {
 
         this.ai = ai;
@@ -139,7 +139,7 @@ public class MoveToPoint : Node
     private const int maxAttempts = 30;
     private const float wanderRadius = 200f;
 
-    public MoveToPoint(Blackboard blackboard, BaseAI ai, Vector3 destination) : base(blackboard)
+    public MoveToPoint(MKBlackboard blackboard, BaseAI ai, Vector3 destination) : base(blackboard)
     {
 
         this.ai = ai;

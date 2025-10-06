@@ -15,24 +15,24 @@ public enum NodeState
 }
 
 
-public class Blackboard
+public class MKBlackboard
 {
 
-    private static Blackboard sharedInstance;
+    private static MKBlackboard sharedInstance;
     public readonly string enemy = "enemy";
     public readonly string flag = "flag";
     private Dictionary<string, object> data = new Dictionary<string, object>();
 
-    private Blackboard() { }
+    private MKBlackboard() { }
 
-    public static Blackboard GetShared(BaseAI caller)
+    public static MKBlackboard GetShared(BaseAI caller)
     {
 
         if (caller is BehaviourAITest || caller is SuperMorten)
         {
 
             if (sharedInstance == null)
-                sharedInstance = new Blackboard();
+                sharedInstance = new MKBlackboard();
 
             return sharedInstance;
 
@@ -67,10 +67,10 @@ public class Blackboard
 public abstract class Node
 {
 
-    protected Blackboard blackboard;
+    protected MKBlackboard blackboard;
     public List<Node> children = new List<Node>();
 
-    public Node(Blackboard blackboard)
+    public Node(MKBlackboard blackboard)
     {
 
         this.blackboard = blackboard;
@@ -85,9 +85,9 @@ public class Tree
 {
 
     private Node root;
-    private Blackboard blackboard;
+    private MKBlackboard blackboard;
 
-    public Tree(Node root, Blackboard blackboard)
+    public Tree(Node root, MKBlackboard blackboard)
     {
 
         this.root = root;
@@ -103,7 +103,7 @@ public class Tree
 public class Selector : Node
 {
 
-    public Selector(Blackboard blackboard) : base(blackboard) {  }
+    public Selector(MKBlackboard blackboard) : base(blackboard) {  }
 
 
     public override NodeState Evaluate()
@@ -127,7 +127,7 @@ public class Selector : Node
 public class Sequence : Node
 {
 
-    public Sequence(Blackboard blackboard) : base(blackboard) { }
+    public Sequence(MKBlackboard blackboard) : base(blackboard) { }
 
 
     public override NodeState Evaluate()

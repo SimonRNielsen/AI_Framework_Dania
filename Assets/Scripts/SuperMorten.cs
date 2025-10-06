@@ -10,7 +10,7 @@ namespace MortensKombat
     public class SuperMorten : BaseAI
     {
 
-        protected Blackboard blackboard;
+        protected MKBlackboard blackboard;
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -27,7 +27,7 @@ namespace MortensKombat
         protected override void StartAI()
         {
 
-            blackboard = Blackboard.GetShared(this);
+            blackboard = MKBlackboard.GetShared(this);
 
         }
 
