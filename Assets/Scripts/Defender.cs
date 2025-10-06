@@ -7,14 +7,20 @@ namespace MortensKombat
     /// CrusaderMorten AI implementation.
     /// TODO: Describe your AI strategy here.
     /// </summary>
-    public class CrusaderMorten : SuperMorten
+    public class Defender : SuperMorten
     {
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
         protected override void ConfigureStats()
         {
-            // TODO: Configure your agent's stats
+
+            AllocateStat(StatType.Speed, 10);
+            AllocateStat(StatType.ProjectileRange, 0);
+            AllocateStat(StatType.VisionRange, 3);
+            AllocateStat(StatType.DodgeCooldown, 7);
+            AllocateStat(StatType.ReloadSpeed, 0);
+
         }
 
         /// <summary>

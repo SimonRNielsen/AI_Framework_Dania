@@ -4,17 +4,23 @@ using AIGame.Core;
 namespace MortensKombat
 {
     /// <summary>
-    /// HolyMorten AI implementation.
+    /// UnderCoverMorten AI implementation.
     /// TODO: Describe your AI strategy here.
     /// </summary>
-    public class HolyMorten : SuperMorten
+    public class Scout : SuperMorten
     {
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
         protected override void ConfigureStats()
         {
-            // TODO: Configure your agent's stats
+
+            AllocateStat(StatType.Speed, 10);
+            AllocateStat(StatType.ProjectileRange, 0);
+            AllocateStat(StatType.VisionRange, 10);
+            AllocateStat(StatType.DodgeCooldown, 0);
+            AllocateStat(StatType.ReloadSpeed, 0);
+
         }
 
         /// <summary>
