@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using AIGame.Core;
 using Simon.AI;
+using MortensKombat;
 
 
 public enum NodeState
@@ -25,7 +26,7 @@ public class Blackboard
     public static Blackboard GetShared(BaseAI caller)
     {
 
-        if (caller is BehaviourAITest)
+        if (caller is BehaviourAITest || caller is SuperMorten)
         {
 
             if (sharedInstance == null)
