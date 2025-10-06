@@ -1,5 +1,7 @@
 using UnityEngine;
 using AIGame.Core;
+using System;
+using System.Collections.Generic;
 
 namespace MortensKombat
 {
@@ -13,6 +15,10 @@ namespace MortensKombat
         protected MKBlackboard blackboard;
         private const float SUPPLYDATA = 0.1f;
         private float timeSinceDataUpdate = SUPPLYDATA;
+        private static Action<Vector3> BallDetectedVector;
+        private static List<Ball> ballsHandled = new List<Ball>();
+        private static bool attackerNameTaken;
+        private static bool defenderNameTaken;
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -28,6 +34,8 @@ namespace MortensKombat
 
             blackboard = MKBlackboard.GetShared(this);
             FlagEnter += SpottedFlag;
+            BallDetected += IsBallArmedAndNotHandled;
+            BallDetectedVector += IsBallIncoming;
 
         }
 
@@ -35,6 +43,8 @@ namespace MortensKombat
         {
 
             FlagEnter -= SpottedFlag;
+            BallDetected -= IsBallArmedAndNotHandled;
+            BallDetectedVector -= IsBallIncoming;
 
         }
 
@@ -57,7 +67,7 @@ namespace MortensKombat
         }
 
 
-        private void SupplyData()
+        protected virtual void SupplyData()
         {
 
             var enemies = GetVisibleEnemiesSnapshot();
@@ -79,6 +89,54 @@ namespace MortensKombat
             if (flags.Count > 0)
                 foreach (var flag in flags)
                     blackboard.SetValue(MyDetectable.TeamID + blackboard.flag, flag);
+
+        }
+
+
+        private void IsBallArmedAndNotHandled(Ball ball)
+        {
+
+            if (!ball.Armed || ballsHandled.Contains(ball)) return;
+
+            ballsHandled.Add(ball);
+
+            Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
+
+            if (rigidbody != null)
+                BallDetectedVector?.Invoke(rigidbody.linearVelocity);
+
+        }
+
+
+        private void IsBallIncoming(Vector3 ballRigidBodyVelocity)
+        {
+
+            if (!CanDodge()) return;
+
+
+
+            Vector3 horizontalVelocity = new Vector3(ballRigidBodyVelocity.x, 0f, ballRigidBodyVelocity.z);
+            horizontalVelocity.Normalize();
+            StartDodge(UnityEngine.Random.value < 0.5f ? new Vector3(horizontalVelocity.z, 0f, -horizontalVelocity.x) : new Vector3(-horizontalVelocity.z, 0f, horizontalVelocity.x));
+
+        }
+
+        protected override string SetName()
+        {
+
+            switch (ToString())
+            {
+                case "Scout":
+                    return "Undercover Morten";
+                case "Defender":
+                    defenderNameTaken = defenderNameTaken ? false : true;
+                    return defenderNameTaken ? "Crusader Morten" : "Munke Morten";
+                case "Attacker":
+                    attackerNameTaken = attackerNameTaken ? false : true;
+                    return attackerNameTaken ? "Holy Morten" : "Martin";
+                default:
+                    return "SuperMorten";
+            }
 
         }
 
