@@ -29,7 +29,9 @@ namespace MortensKombat
         /// </summary>
         protected override void StartAI()
         {
-            // TODO: Initialize your AI here
+
+            base.StartAI();
+
         }
 
         /// <summary>

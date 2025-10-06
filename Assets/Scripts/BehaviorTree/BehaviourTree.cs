@@ -19,6 +19,8 @@ public class Blackboard
 {
 
     private static Blackboard sharedInstance;
+    public readonly string enemy = "enemy";
+    public readonly string flag = "flag";
     private Dictionary<string, object> data = new Dictionary<string, object>();
 
     private Blackboard() { }
