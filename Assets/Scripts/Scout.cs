@@ -40,12 +40,9 @@ namespace MortensKombat
         /// </summary>
         protected override void ExecuteAI()
         {
-            
+
             base.ExecuteAI();
 
         }
-
-        public override string ToString() => "Scout";
-
     }
 }
