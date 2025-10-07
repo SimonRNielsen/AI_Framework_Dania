@@ -11,7 +11,6 @@ namespace MortensKombat
     {
 
         #region Fields
-        ControlPoint controlPoint = ControlPoint.Instance;
 
         public bool inCP;
 
@@ -67,9 +66,6 @@ namespace MortensKombat
         {
 
             base.ExecuteAI();
-
-            //Deffenders move to Control Point
-            MoveTo(controlPoint.transform.position);
 
         }
 

@@ -17,29 +17,47 @@ using MortensKombat;
 
 public class MoveToCP : MKNode
 {
-    #region Fields
-    private SuperMorten mortenAI;
-    private bool inCP;
+    private SuperMorten supMorten;
+    ControlPoint controlPoint = ControlPoint.Instance;
 
-    #endregion
-    #region Properties
-    #endregion
-    #region Construtor
+
     public MoveToCP(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
     {
-        this.mortenAI = mortenAI;
+        this.supMorten = mortenAI;
+        this.controlPoint = ControlPoint.Instance;
     }
-    #endregion
-    #region Methods
+
+
+
     public override NodeState Evaluate()
     {
-        if(inCP == true)
+        //Starting NavMesh agent
+        if (!supMorten.IsStopped())
         {
-            return NodeState.Success;
+            supMorten.SetStopped(false);
         }
-        
 
-        return NodeState.Failure;
+        //Agent bevæger sig til Control point
+        supMorten.MoveTo(controlPoint.transform.position);
+
+            if (supMorten.transform.position == controlPoint.transform.position)
+            {
+                return NodeState.Success;
+            }
+
+            if (supMorten.transform.position != controlPoint.transform.position)
+            {
+                return NodeState.Running;
+            }
+
+        
+        
+        if (supMorten.IsStopped())
+        {
+            return NodeState.Failure;
+        }
+
+
+
     }
-    #endregion
 }
