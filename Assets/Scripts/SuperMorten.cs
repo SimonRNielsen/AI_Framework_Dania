@@ -22,6 +22,8 @@ namespace MortensKombat
         private static bool attackerNameTaken;
         private static bool defenderNameTaken;
 
+        public EnemyData Target { get; set; }
+
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
