@@ -13,6 +13,7 @@ public class MoveToScouting : MKNode
     public MoveToScouting(MKBlackboard blackboard, BaseAI baseAI) : base(blackboard)
     {
         this.baseAI = baseAI;
+
     }
 
     public override NodeState Evaluate()
