@@ -17,9 +17,11 @@ namespace MortensKombat
             Debug.Log("Trying to shoot at target");
             if (baseAI.Target != null)
             {
-                Vector3 direction = (baseAI.Target.position - baseAI.transform.position).normalized;
-                baseAI.ThrowBallInDirection(direction, 3);
-                Debug.Log("Ball thrown in direction: " + direction);
+                //Vector3 direction = (baseAI.Target.position - baseAI.transform.position);
+                baseAI.FaceTarget(baseAI.Target.position);
+
+                baseAI.ThrowBallAt(baseAI.Target.enemy);
+                //Debug.Log("Ball thrown in direction: " + direction);
                 return NodeState.Success;
             }
             Debug.Log("Shot failed: no target found");
