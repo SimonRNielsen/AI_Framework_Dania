@@ -12,7 +12,7 @@ namespace MortensKombat
     /// </summary>
     public class SuperMorten : BaseAI
     {
-        #region Field
+        #region Fields
         protected MKBlackboard blackboard;
         private readonly float SUPPLYDATA = 0.1f;                           //Timer for renewing data
         private readonly float INCOMINGDOT = 0.89f;                         //Dot value for close to directly towards this
@@ -21,18 +21,21 @@ namespace MortensKombat
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
         private static bool attackerNameTaken;
         private static bool defenderNameTaken;
-
         private float arrivalTreshold = 0.5f;
-
         private Vector3 targetDestination;
+        protected MKTree behaviourTree;
 
         #endregion
 
         #region Properties
+        public EnemyData Target { get; set; }
         public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
         public float ArrivalTreshold { get => arrivalTreshold; }
 
         #endregion
+
+        #region Methods
+
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -79,6 +82,9 @@ namespace MortensKombat
                 SupplyData();
 
             }
+
+            if (behaviourTree != null) 
+                behaviourTree.Tick();
 
         }
 
@@ -176,6 +182,6 @@ namespace MortensKombat
 
         public override string ToString() => "SuperMorten";
 
-       
+        #endregion
     }
 }

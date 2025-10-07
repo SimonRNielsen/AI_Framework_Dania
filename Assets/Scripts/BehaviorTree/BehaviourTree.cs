@@ -74,10 +74,11 @@ public class MKBlackboard
                 enemyData.position = enemy.Position;
                 enemyData.timestamp = Time.time;
                 enemyData.recordedFrame = enemy.Frame;
+                enemyData.enemy = enemy;
 
             }
             else
-                data[key + enemy.Id] = new EnemyData(enemy.Position, enemy.Id, Time.time, enemy.Frame);
+                data[key + enemy.Id] = new EnemyData(enemy.Position, enemy.Id, Time.time, enemy.Frame, enemy);
 
             return;
 
@@ -210,14 +211,16 @@ public class EnemyData
     public float timestamp;
     public int id;
     public int recordedFrame;
+    public PerceivedAgent enemy;
 
-    public EnemyData(Vector3 pos, int enemyID, float time, int frame)
+    public EnemyData(Vector3 pos, int enemyID, float time, int frame, PerceivedAgent enemy)
     {
 
         position = pos;
         id = enemyID;
         timestamp = time;
         recordedFrame = frame;
+        this.enemy = enemy;
 
     }
 
