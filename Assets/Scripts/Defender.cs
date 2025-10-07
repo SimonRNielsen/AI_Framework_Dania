@@ -9,6 +9,20 @@ namespace MortensKombat
     /// </summary>
     public class Defender : SuperMorten
     {
+
+        #region Fields
+        ControlPoint controlPoint = ControlPoint.Instance;
+
+        public bool inCP;
+
+        #endregion
+        #region Properties
+        #endregion
+
+        #region Constructor
+        #endregion
+
+        #region Methods
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
@@ -43,9 +57,15 @@ namespace MortensKombat
 
             base.ExecuteAI();
 
+            //Deffenders move to Control Point
+            MoveTo(controlPoint.transform.position);
+
         }
 
         public override string ToString() => "Defender";
+        #endregion
+
+        
 
     }
 }

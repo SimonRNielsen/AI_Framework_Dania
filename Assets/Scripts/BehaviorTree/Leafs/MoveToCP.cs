@@ -17,35 +17,29 @@ using MortensKombat;
 
 public class MoveToCP : MKNode
 {
+    #region Fields
     private SuperMorten mortenAI;
-    
+    private bool inCP;
 
+    #endregion
+    #region Properties
+    #endregion
+    #region Construtor
     public MoveToCP(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
     {
         this.mortenAI = mortenAI;
     }
-
+    #endregion
+    #region Methods
     public override NodeState Evaluate()
     {
-
-        //var enemies = ai.GetVisibleEnemiesSnapshot();
-        //if (enemies.Count > 0)
-        //{
-
-        //    ai.RefreshOrAcquireTarget();
-
-        //    if (blackboard != null)
-        //    {
-
-        //        blackboard.SetValue(ai.MyDetectable.TeamID + enemyPosition, enemies[0].Position);
-        //        blackboard.SetValue(ai.MyDetectable.TeamID + enemyTime, Time.time);
-
-        //    }
-
-        //    return NodeState.Success;
-
-        //}
+        if(inCP == true)
+        {
+            return NodeState.Success;
+        }
+        
 
         return NodeState.Failure;
     }
+    #endregion
 }
