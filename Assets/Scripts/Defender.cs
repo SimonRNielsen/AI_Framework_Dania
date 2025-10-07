@@ -29,9 +29,9 @@ namespace MortensKombat
         protected override void ConfigureStats()
         {
 
-            AllocateStat(StatType.Speed, 10);
-            AllocateStat(StatType.ProjectileRange, 0);
-            AllocateStat(StatType.VisionRange, 3);
+            AllocateStat(StatType.Speed, 9);
+            AllocateStat(StatType.ProjectileRange, 2);
+            AllocateStat(StatType.VisionRange, 2);
             AllocateStat(StatType.DodgeCooldown, 7);
             AllocateStat(StatType.ReloadSpeed, 0);
 
@@ -45,6 +45,17 @@ namespace MortensKombat
         {
 
             base.StartAI();
+
+            MKSequence combatSequence = new MKSequence(blackboard);
+            IsEnemyInVisibleRange isEnemyInVisibleRange = new IsEnemyInVisibleRange(blackboard, this);
+            ShootThatBunny shootThatBunny = new ShootThatBunny(blackboard, this);
+            combatSequence.children.Add(isEnemyInVisibleRange);
+            combatSequence.children.Add(shootThatBunny);
+
+            MKSelector rootSelector = new MKSelector(blackboard);
+            rootSelector.children.Add(combatSequence);
+
+            behaviourTree = new MKTree(rootSelector, blackboard);
 
         }
 
