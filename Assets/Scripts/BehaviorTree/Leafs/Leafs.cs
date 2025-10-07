@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class IsEnemyVisible : Node
+public class IsEnemyVisible : MKNode
 {
 
     private BaseAI ai;
@@ -45,7 +45,7 @@ public class IsEnemyVisible : Node
 }
 
 
-public class AttackEnemy : Node
+public class AttackEnemy : MKNode
 {
 
     private BaseAI ai;
@@ -76,7 +76,7 @@ public class AttackEnemy : Node
 
 }
 
-public class InvestigateLastSeenEnemy : Node
+public class InvestigateLastSeenEnemy : MKNode
 {
 
     private BaseAI ai;
@@ -131,7 +131,7 @@ public class InvestigateLastSeenEnemy : Node
 }
 
 
-public class MoveToPoint : Node
+public class MoveToPoint : MKNode
 {
 
     private BaseAI ai;
