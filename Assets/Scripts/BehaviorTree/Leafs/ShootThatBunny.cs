@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class ShootThatBunny
+namespace MortensKombat
 {
-    
+    public class ShootThatBunny 
+    {
+
+    }
 }
