@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SetTarget : MKNode
+
+public class IsEnemyVisible : MKNode
 {
 
     private BaseAI ai;
     public const string enemyPosition = "LastSeenEnemyPosition";
     public const string enemyTime = "LastSeenEnemyTime";
 
-    public SetTarget(MKBlackboard blackboard, BaseAI ai) : base(blackboard)
+    public IsEnemyVisible(MKBlackboard blackboard, BaseAI  ai) : base(blackboard)
     {
 
         this.ai = ai;

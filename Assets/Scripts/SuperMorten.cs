@@ -23,6 +23,13 @@ namespace MortensKombat
         private static bool defenderNameTaken;
         public EnemyData Target { get; set; }
 
+        private float arrivalTreshold = 0.5f;
+
+        private Vector3 targetDestination;
+
+        public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
+        public float ArrivalTreshold { get => arrivalTreshold; }
+
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
@@ -165,5 +172,6 @@ namespace MortensKombat
 
         public override string ToString() => "SuperMorten";
 
+       
     }
 }
