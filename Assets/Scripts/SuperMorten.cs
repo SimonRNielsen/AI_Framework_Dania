@@ -152,12 +152,12 @@ namespace MortensKombat
                     return "Undercover Morten";
                 case "Defender":
                     defenderNameTaken = defenderNameTaken ? false : true;
-                    return defenderNameTaken ? "Crusader Morten" : "Munke Morten";
+                    return defenderNameTaken ? "Crusader Morten" : "Holy Morten";
                 case "Attacker":
                     attackerNameTaken = attackerNameTaken ? false : true;
-                    return attackerNameTaken ? "Holy Morten" : "Martin";
+                    return attackerNameTaken ? "Munke Morten" : "Martin";
                 default:
-                    return "SuperMorten";
+                    return ToString();
             }
 
         }
