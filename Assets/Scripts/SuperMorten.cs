@@ -43,14 +43,14 @@ namespace MortensKombat
 
         }
 
-        private void OnDisable() //Unsubscribe events
-        {
+        //private void OnDisable() //Unsubscribe events
+        //{
 
-            FlagEnter -= SpottedFlag;
-            BallDetected -= IsBallArmedAndNotHandled;
-            BallDetectedVector -= IsBallIncoming;
+        //    FlagEnter -= SpottedFlag;
+        //    BallDetected -= IsBallArmedAndNotHandled;
+        //    BallDetectedVector -= IsBallIncoming;
 
-        }
+        //}
 
         /// <summary>
         /// Called every frame to make decisions.
