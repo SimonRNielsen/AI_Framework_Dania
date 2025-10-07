@@ -119,13 +119,13 @@ public class MKBlackboard
 }
 
 
-public abstract class Node
+public abstract class MKNode
 {
 
     protected MKBlackboard blackboard;
-    public List<Node> children = new List<Node>();
+    public List<MKNode> children = new List<MKNode>();
 
-    public Node(MKBlackboard blackboard)
+    public MKNode(MKBlackboard blackboard)
     {
 
         this.blackboard = blackboard;
@@ -136,13 +136,13 @@ public abstract class Node
 
 }
 
-public class Tree
+public class MKTree
 {
 
-    private Node root;
+    private MKNode root;
     private MKBlackboard blackboard;
 
-    public Tree(Node root, MKBlackboard blackboard)
+    public MKTree(MKNode root, MKBlackboard blackboard)
     {
 
         this.root = root;
@@ -155,16 +155,16 @@ public class Tree
 }
 
 
-public class Selector : Node
+public class MKSelector : MKNode
 {
 
-    public Selector(MKBlackboard blackboard) : base(blackboard) {  }
+    public MKSelector(MKBlackboard blackboard) : base(blackboard) {  }
 
 
     public override NodeState Evaluate()
     {
 
-        foreach (Node child in children)
+        foreach (MKNode child in children)
         {
 
             NodeState result = child.Evaluate();
@@ -179,16 +179,16 @@ public class Selector : Node
 }
 
 
-public class Sequence : Node
+public class MKSequence : MKNode
 {
 
-    public Sequence(MKBlackboard blackboard) : base(blackboard) { }
+    public MKSequence(MKBlackboard blackboard) : base(blackboard) { }
 
 
     public override NodeState Evaluate()
     {
 
-        foreach (Node child in children)
+        foreach (MKNode child in children)
         {
 
             NodeState result = child.Evaluate();

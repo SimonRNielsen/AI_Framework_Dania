@@ -11,7 +11,7 @@ namespace Simon.AI
     public class BehaviourAITest : BaseAI
     {
 
-        private Tree behaviourTree;
+        private MKTree behaviourTree;
         private MKBlackboard blackboard;
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Simon.AI
 
             blackboard = MKBlackboard.GetShared(this);
 
-            Sequence combatSequence = new Sequence(blackboard);
+            MKSequence combatSequence = new MKSequence(blackboard);
             combatSequence.children.Add(new IsEnemyVisible(blackboard, this));
             combatSequence.children.Add(new AttackEnemy(blackboard, this));
 
@@ -45,12 +45,12 @@ namespace Simon.AI
 
             MoveToPoint moveToPoint = new MoveToPoint(blackboard, this, transform.position);
 
-            Selector rootSelector = new Selector(blackboard);
+            MKSelector rootSelector = new MKSelector(blackboard);
             rootSelector.children.Add(combatSequence);
             rootSelector.children.Add(investigateLastSeenEnemy);
             rootSelector.children.Add(moveToPoint);
 
-            behaviourTree = new Tree(rootSelector, blackboard);
+            behaviourTree = new MKTree(rootSelector, blackboard);
 
         }
 
