@@ -12,7 +12,7 @@ namespace MortensKombat
     /// </summary>
     public class SuperMorten : BaseAI
     {
-
+        #region Field
         protected MKBlackboard blackboard;
         private readonly float SUPPLYDATA = 0.1f;                           //Timer for renewing data
         private readonly float INCOMINGDOT = 0.89f;                         //Dot value for close to directly towards this
@@ -26,8 +26,13 @@ namespace MortensKombat
 
         private Vector3 targetDestination;
 
+        #endregion
+
+        #region Properties
         public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
         public float ArrivalTreshold { get => arrivalTreshold; }
+
+        #endregion
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
