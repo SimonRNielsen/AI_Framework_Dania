@@ -25,7 +25,7 @@ public class MoveInRange : MKNode
             {
 
                 test = true;
-                Debug.Log("Enemy deemed in range");
+                Debug.Log("Enemy deemed in range (runs once)");
 
             }
 
@@ -34,7 +34,6 @@ public class MoveInRange : MKNode
 
         }
 
-        ai.SetStopped(false);
         ai.MoveTo(ai.Target.position);
 
         return NodeState.Failure;

@@ -32,6 +32,12 @@ namespace MortensKombat
 
             base.StartAI();
 
+            MKSelector rootSelector = new MKSelector(blackboard);
+
+
+
+            behaviourTree = new MKTree(rootSelector, blackboard);
+
         }
 
         /// <summary>

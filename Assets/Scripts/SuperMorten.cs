@@ -21,6 +21,7 @@ namespace MortensKombat
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
         private static bool attackerNameTaken;
         private static bool defenderNameTaken;
+        protected MKTree behaviourTree;
 
         public EnemyData Target { get; set; }
 
@@ -69,6 +70,9 @@ namespace MortensKombat
                 SupplyData();
 
             }
+
+            if (behaviourTree != null) 
+                behaviourTree.Tick();
 
         }
 
