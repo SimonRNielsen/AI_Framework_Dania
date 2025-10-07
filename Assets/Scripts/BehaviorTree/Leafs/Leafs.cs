@@ -97,16 +97,16 @@ public class InvestigateLastSeenEnemy : MKNode
         {
 
             // Check if we have recent enemy intel using generic methods
-            if (blackboard.HasKey(ai.MyDetectable.TeamID + SetTarget.enemyPosition) && blackboard.HasKey(ai.MyDetectable.TeamID + SetTarget.enemyTime))
+            if (blackboard.HasKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyPosition) && blackboard.HasKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyTime))
             {
 
-                float lastSeenTime = blackboard.GetValue<float>(ai.MyDetectable.TeamID + SetTarget.enemyTime);
+                float lastSeenTime = blackboard.GetValue<float>(ai.MyDetectable.TeamID + IsEnemyVisible.enemyTime);
 
                 // Only investigate if intel is recent (within 10 seconds)
                 if (Time.time - lastSeenTime < 10f)
                 {
 
-                    Vector3 lastSeenPosition = blackboard.GetValue<Vector3>(ai.MyDetectable.TeamID + SetTarget.enemyPosition);
+                    Vector3 lastSeenPosition = blackboard.GetValue<Vector3>(ai.MyDetectable.TeamID + IsEnemyVisible.enemyPosition);
                     ai.MoveTo(lastSeenPosition);
 
                     return NodeState.Success;
@@ -116,8 +116,8 @@ public class InvestigateLastSeenEnemy : MKNode
                 {
 
                     // Clean up old data using generic methods
-                    blackboard.RemoveKey(ai.MyDetectable.TeamID + SetTarget.enemyPosition);
-                    blackboard.RemoveKey(ai.MyDetectable.TeamID + SetTarget.enemyTime);
+                    blackboard.RemoveKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyPosition);
+                    blackboard.RemoveKey(ai.MyDetectable.TeamID + IsEnemyVisible.enemyTime);
 
                 }
 
