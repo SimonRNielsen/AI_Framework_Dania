@@ -38,7 +38,7 @@ namespace Simon.AI
             blackboard = MKBlackboard.GetShared(this);
 
             MKSequence combatSequence = new MKSequence(blackboard);
-            combatSequence.children.Add(new IsEnemyVisible(blackboard, this));
+            combatSequence.children.Add(new SetTarget(blackboard, this));
             combatSequence.children.Add(new AttackEnemy(blackboard, this));
 
             InvestigateLastSeenEnemy investigateLastSeenEnemy = new InvestigateLastSeenEnemy(blackboard, this);

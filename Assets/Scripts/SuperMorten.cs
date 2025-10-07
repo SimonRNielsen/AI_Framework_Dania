@@ -21,6 +21,7 @@ namespace MortensKombat
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
         private static bool attackerNameTaken;
         private static bool defenderNameTaken;
+        public EnemyData Target { get; set; }
 
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
