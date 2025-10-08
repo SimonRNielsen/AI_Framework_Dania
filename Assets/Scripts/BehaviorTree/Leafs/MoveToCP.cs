@@ -4,16 +4,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using MortensKombat;
 
-// baseai.position - find egen position
-
-//Set destination 0,0 CP
-
-//Find path
-
-//Move
-
-//Check - succes
-
 
 public class MoveToCP : MKNode
 {
@@ -31,31 +21,45 @@ public class MoveToCP : MKNode
 
     public override NodeState Evaluate()
     {
-        //Starting NavMesh agent
-        if (!supMorten.IsStopped())
+        Debug.Log($"{supMorten.name} moving toward ControlPoint");
+
+
+        ////Checking for Control Point spawn
+        //if (supMorten == null ||controlPoint == null)
+        //{
+        //    Debug.Log("Missing control point");
+        //    return NodeState.Failure;
+        //}
+
+        ////Starting NavMesh agent
+        //if (supMorten.IsStopped())
+        //{
+        //    supMorten.SetStopped(false);
+        //}
+
+
+        //Agent moves to Control point
+        supMorten.TargetDestination = controlPoint.transform.position;
+        supMorten.MoveTo(supMorten.TargetDestination);
+
+        //Calculates distance between agent and control point
+        float distance = Vector3.Distance(supMorten.transform.position, supMorten.TargetDestination);
+
+        //Agent arrives at CP
+        if (distance < supMorten.ArrivalTreshold)
         {
-            supMorten.SetStopped(false);
+            return NodeState.Success;
         }
 
-        //Agent bevæger sig til Control point
-        supMorten.MoveTo(controlPoint.transform.position);
+        ////Agent still moving, returns running
+        //if (supMorten.HasPath() && !supMorten.IsStopped())
+        //{
+        //    return NodeState.Running;
+        //}
 
-            if (supMorten.transform.position == controlPoint.transform.position)
-            {
-                return NodeState.Success;
-            }
-
-            if (supMorten.transform.position != controlPoint.transform.position)
-            {
-                return NodeState.Running;
-            }
-
+        //If it's interrupted it fails
+        return NodeState.Failure;
         
-        
-        if (supMorten.IsStopped())
-        {
-            return NodeState.Failure;
-        }
 
 
 
