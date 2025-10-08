@@ -32,7 +32,16 @@ namespace MortensKombat
 
             base.StartAI();
 
-        }
+            MKSequence scouting = new MKSequence(blackboard);
+            MoveToScouting moveToScouting = new MoveToScouting(blackboard, this);
+
+            scouting.children.Add(moveToScouting);
+
+            MKSelector rootSelector = new MKSelector(blackboard);
+            rootSelector.children.Add(scouting);
+
+            behaviourTree = new MKTree(rootSelector, blackboard);
+                }
 
         /// <summary>
         /// Called every frame to make decisions.
