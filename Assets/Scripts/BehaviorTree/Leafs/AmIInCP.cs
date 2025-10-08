@@ -24,6 +24,7 @@ public class AmIInCP : MKNode
 
         if(distance < radiusCP)
         {
+            Debug.Log("Am I in CP in succes");
             return NodeState.Success;
         }
 
