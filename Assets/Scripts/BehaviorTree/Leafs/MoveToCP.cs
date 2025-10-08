@@ -62,6 +62,7 @@ public class MoveToCP : MKNode
         //Agent arrives at CP
         if (distance < supMorten.ArrivalTreshold)
         {
+            Debug.Log("MoveToCP succes");
             return NodeState.Success;
         }
 

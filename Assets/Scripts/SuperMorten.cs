@@ -14,9 +14,11 @@ namespace MortensKombat
     {
         #region Fields
         protected MKBlackboard blackboard;
-        private readonly float SUPPLYDATA = 0.1f;                           //Timer for renewing data
+        private readonly float SUPPLYDATAINTERVAL = 0.5f;                   //Timer for renewing data
         private readonly float INCOMINGDOT = 0.89f;                         //Dot value for close to directly towards this
-        private float timeSinceDataUpdate;
+        private static readonly float CLEARDATAINTERVAL = 1f;
+        private static float lastTimeDataCleaned;
+        private float lastDataStoredAt;
         private static Action<Vector3, Vector3, Team> BallDetectedVector;   //Transmits data to teammembers
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
         private static bool attackerNameTaken;
@@ -24,13 +26,14 @@ namespace MortensKombat
         private readonly float arrivalTreshold = 1.5f;
         private Vector3 targetDestination;
         protected MKTree behaviourTree;
-
+        private Vector3 spawnPosition = Vector3.zero;                       //Spawn position for specific position needs to be set at the under class in construction
         #endregion
 
         #region Properties
         public EnemyData Target { get; set; }
         public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
         public float ArrivalTreshold { get => arrivalTreshold; }
+        public Vector3 SpawnPosition { get => spawnPosition; set => spawnPosition = value; }
 
         #endregion
 
@@ -53,8 +56,6 @@ namespace MortensKombat
             FlagEnter += SpottedFlag;                   //Records data on enemy flag
             BallDetected += IsBallArmedAndNotHandled;   //Dataprocessing method that invokes BallDetectedVector if ball is dangerous
             BallDetectedVector += IsBallIncoming;       //Transmits data to all teammembers
-            
-            timeSinceDataUpdate = SUPPLYDATA;           //Instant update on Execute
 
         }
 
@@ -74,17 +75,24 @@ namespace MortensKombat
         protected override void ExecuteAI()
         {
 
-            timeSinceDataUpdate += Time.deltaTime;
-            if (timeSinceDataUpdate >= SUPPLYDATA) //Loops update of data on timer
+            if (Time.time - lastDataStoredAt >= SUPPLYDATAINTERVAL) //Loops update of data on timer
             {
 
-                timeSinceDataUpdate = 0f;
+                lastDataStoredAt = Time.time;
                 SupplyData();
 
             }
 
-            if (behaviourTree != null) 
+            if (behaviourTree != null)
                 behaviourTree.Tick();
+
+            if (Time.time - lastTimeDataCleaned >= CLEARDATAINTERVAL)
+            {
+
+                lastTimeDataCleaned = Time.time;
+                blackboard.RemoveObsoleteData();
+
+            }
 
         }
 
@@ -128,11 +136,11 @@ namespace MortensKombat
 
             if (!ball.Armed || ballsHandled.Contains(ball)) return; //Early return if ball isn't dangerous or already been processed
 
-            Vector3 ballFlyingInDirection = (ball.transform.position - ball.Parent.transform.position).normalized;
+            Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
 
             ballsHandled.Add(ball); //Flags ball as processed
 
-            BallDetectedVector?.Invoke(ballFlyingInDirection, ball.transform.position, MyDetectable.TeamID); //Transmits relevant data to teammembers
+            BallDetectedVector?.Invoke(rigidbody.linearVelocity, ball.transform.position, MyDetectable.TeamID); //Transmits relevant data to teammembers
 
         }
 
@@ -169,10 +177,10 @@ namespace MortensKombat
                 case "Scout":
                     return "Undercover Morten";
                 case "Defender":
-                    defenderNameTaken = defenderNameTaken ? false : true;
+                    defenderNameTaken = !defenderNameTaken;
                     return defenderNameTaken ? "Crusader Morten" : "Holy Morten";
                 case "Attacker":
-                    attackerNameTaken = attackerNameTaken ? false : true;
+                    attackerNameTaken = !attackerNameTaken;
                     return attackerNameTaken ? "Munke Morten" : "Martin";
                 default:
                     return ToString();

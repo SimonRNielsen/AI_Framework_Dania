@@ -32,6 +32,31 @@ namespace MortensKombat
 
             base.StartAI();
 
+            MKSelector rootSelector = new MKSelector(blackboard);
+
+            MKSequence offenceSequence = new MKSequence(blackboard);
+            rootSelector.children.Add(offenceSequence);
+
+            AquireTarget aquireTarget = new AquireTarget(blackboard, this);
+            MoveInRange moveInRange = new MoveInRange(blackboard, this);
+            ShootThatBunny shootThatBunny = new ShootThatBunny(blackboard, this);
+            offenceSequence.children.Add(aquireTarget);
+            offenceSequence.children.Add(moveInRange);
+            offenceSequence.children.Add(shootThatBunny);
+
+            MKSequence goToCPSequence = new MKSequence(blackboard);
+            rootSelector.children.Add(goToCPSequence);
+
+            AmIInCP amIInCP = new AmIInCP(blackboard, this);
+            MoveToCP moveToCP = new MoveToCP(blackboard, this);
+            goToCPSequence.children.Add(moveToCP);
+            goToCPSequence.children.Add(amIInCP);
+
+            //MoveAroundCP moveAroundCP = new MoveAroundCP(blackboard, this);
+            //rootSelector.children.Add(moveAroundCP);
+
+            behaviourTree = new MKTree(rootSelector, blackboard);
+
         }
 
         /// <summary>
