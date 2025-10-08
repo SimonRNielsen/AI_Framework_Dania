@@ -30,18 +30,21 @@ public class MoveToScouting : MKNode
     public override NodeState Evaluate()
     {
 
-        Vector3 closestEnemy = blackboard.GetEnemies(mortenAI)
+        Vector3? closestEnemy = blackboard.GetEnemies(mortenAI)
             .OrderBy(x => Vector3.Distance(mortenAI.transform.position, x.position))
-            .FirstOrDefault().position;
+            .FirstOrDefault()?.position;
 
-        if (closestEnemy != Vector3.zero)
+        if (closestEnemy.HasValue)
         {
-            if (Vector3.Distance(closestEnemy, mortenAI.transform.position) < enemyRange)
+            if (closestEnemy != Vector3.zero)
             {
-                return NodeState.Failure;
+                if (Vector3.Distance(closestEnemy.Value, mortenAI.transform.position) < enemyRange)
+                {
+                    return NodeState.Failure;
+                }
             }
         }
-        
+
         //Staring the NavMesh agent
         if (!mortenAI.IsStopped())
         {
