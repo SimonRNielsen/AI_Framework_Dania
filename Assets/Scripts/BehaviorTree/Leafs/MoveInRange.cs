@@ -6,8 +6,6 @@ public class MoveInRange : MKNode
 
     private SuperMorten ai;
 
-    private bool test = false;
-
     public MoveInRange(MKBlackboard blackboard, SuperMorten parent) : base(blackboard)
     {
 
@@ -20,14 +18,6 @@ public class MoveInRange : MKNode
 
         if (Vector3.Distance(ai.Target.position, ai.transform.position) <= ai.ProjectileRange)
         {
-
-            if (!test)
-            {
-
-                test = true;
-                Debug.Log("Enemy deemed in range (runs once)");
-
-            }
 
             ai.StopMoving();
             return NodeState.Success;

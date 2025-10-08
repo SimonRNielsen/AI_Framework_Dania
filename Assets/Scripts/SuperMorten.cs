@@ -15,7 +15,7 @@ namespace MortensKombat
         #region Fields
         protected MKBlackboard blackboard;
         private readonly float SUPPLYDATAINTERVAL = 0.5f;                   //Timer for renewing data
-        private readonly float INCOMINGDOT = 0.89f;                         //Dot value for close to directly towards this
+        private readonly float INCOMINGDOT = 0.98f;                         //Dot value for close to directly towards this
         private static readonly float CLEARDATAINTERVAL = 1f;
         private static float lastTimeDataCleaned;
         private float lastDataStoredAt;
@@ -56,6 +56,7 @@ namespace MortensKombat
             FlagEnter += SpottedFlag;                   //Records data on enemy flag
             BallDetected += IsBallArmedAndNotHandled;   //Dataprocessing method that invokes BallDetectedVector if ball is dangerous
             BallDetectedVector += IsBallIncoming;       //Transmits data to all teammembers
+            EnemyEnterVision += SupplyData;             //Immediately transmits data to blackboard
 
         }
 
@@ -76,23 +77,13 @@ namespace MortensKombat
         {
 
             if (Time.time - lastDataStoredAt >= SUPPLYDATAINTERVAL) //Loops update of data on timer
-            {
-
-                lastDataStoredAt = Time.time;
                 SupplyData();
-
-            }
 
             if (behaviourTree != null)
                 behaviourTree.Tick();
 
             if (Time.time - lastTimeDataCleaned >= CLEARDATAINTERVAL)
-            {
-
-                lastTimeDataCleaned = Time.time;
-                blackboard.RemoveObsoleteData();
-
-            }
+                lastTimeDataCleaned = blackboard.RemoveObsoleteData();
 
         }
 
@@ -105,8 +96,10 @@ namespace MortensKombat
             var enemies = GetVisibleEnemiesSnapshot();
 
             if (enemies.Count > 0)
-                foreach (var enemy in enemies)
+                foreach (PerceivedAgent enemy in enemies)
                     blackboard.SetValue(MyDetectable.TeamID + blackboard.enemy, enemy);
+
+            lastDataStoredAt = Time.time;
 
         }
 
@@ -122,7 +115,7 @@ namespace MortensKombat
             var flags = GetVisibleFlagsSnapShot();
 
             if (flags.Count > 0)
-                foreach (var flag in flags)
+                foreach (PerceivedFlag flag in flags)
                     blackboard.SetValue(MyDetectable.TeamID + blackboard.flag, flag);
 
         }
@@ -156,9 +149,9 @@ namespace MortensKombat
             if (!CanDodge() || id != MyDetectable.TeamID) return;                                                                                                                       //Early return if unable to dodge (or unnecessary because it's own teams ball)
 
             Vector3 fromOriginToThis = (transform.position - ballOrigin).normalized;                                                                                                    //Calculate velocity normalized compared to this
-            float dot = Vector3.Dot(ballVelocity, fromOriginToThis);                                                                                                                    //Determine Dot value of direction required to hit this, and balls direction
+            float dot = Vector3.Dot(ballVelocity.normalized, fromOriginToThis);                                                                                                                    //Determine Dot value of direction required to hit this, and balls direction
 
-            Debug.Log($"Dot value for {MyName} was: {dot}"); //Debugging and Testing
+            //Debug.LogWarning($"Dot value for {MyName} was: {dot}"); //Debugging and Testing
 
             if (dot < INCOMINGDOT) return;                                                                                                                                              //Early return if ball not deemed to hit
 

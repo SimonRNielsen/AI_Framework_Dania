@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using AIGame.Core;
-using Simon.AI;
 using MortensKombat;
 using System.Linq;
 
@@ -29,6 +28,7 @@ public class MKBlackboard
     /// </summary>
     public readonly string flag = "enemyFlag";
     private Dictionary<string, object> data = new Dictionary<string, object>();
+    private readonly float DATANOTOBSOLETE = 10f;
 
     private MKBlackboard() { }
 
@@ -40,7 +40,7 @@ public class MKBlackboard
     public static MKBlackboard GetShared(BaseAI caller)
     {
 
-        if (caller is BehaviourAITest || caller is SuperMorten)
+        if (caller is SuperMorten)
         {
 
             if (sharedInstance == null)
@@ -117,18 +117,28 @@ public class MKBlackboard
     /// <param name="key">Removes data at location</param>
     public void RemoveKey(string key) => data.Remove(key);
 
-
+    /// <summary>
+    /// Removes enemy data older than 10 seconds
+    /// </summary>
+    /// <returns>Timestamp (Time.time)</returns>
     public float RemoveObsoleteData()
     {
 
-        List<string> keys = data.Where(x => x.Value is EnemyData enemyData && Time.time - enemyData.timestamp > 10f).Select(x => x.Key).ToList();
+        List<string> keys = data.Where(x => x.Value is EnemyData enemyData && Time.time - enemyData.timestamp > DATANOTOBSOLETE).Select(x => x.Key).ToList();
 
-        foreach (string key in keys)
-            RemoveKey(key);
+        if (keys.Count > 0)
+        {
+
+            Debug.LogWarning($"Removed {keys.Count} obsolete enemy data from blackboard");
+
+            foreach (string key in keys)
+                RemoveKey(key);
+
+        }
 
         return Time.time;
 
-    } 
+    }
 
 }
 
@@ -172,7 +182,7 @@ public class MKTree
 public class MKSelector : MKNode
 {
 
-    public MKSelector(MKBlackboard blackboard) : base(blackboard) {  }
+    public MKSelector(MKBlackboard blackboard) : base(blackboard) { }
 
 
     public override NodeState Evaluate()
