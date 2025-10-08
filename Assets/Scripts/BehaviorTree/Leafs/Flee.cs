@@ -12,7 +12,7 @@ public class Flee : MKNode
 
     #endregion
 
-    public Flee (MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
+    public Flee(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
     {
         this.mortenAI = mortenAI;
 
@@ -21,6 +21,8 @@ public class Flee : MKNode
 
     public override NodeState Evaluate()
     {
+        mortenAI.TargetDestination = spawnPosition;
+
         mortenAI.FaceTarget(-spawnPosition);
 
         mortenAI.StrafeTo(spawnPosition);
