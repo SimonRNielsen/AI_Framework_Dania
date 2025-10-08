@@ -9,6 +9,19 @@ namespace MortensKombat
     /// </summary>
     public class Defender : SuperMorten
     {
+
+        #region Fields
+
+        public bool inCP;
+
+        #endregion
+        #region Properties
+        #endregion
+
+        #region Constructor
+        #endregion
+
+        #region Methods
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
@@ -32,13 +45,23 @@ namespace MortensKombat
 
             base.StartAI();
 
+            //Attack sequence
             MKSequence combatSequence = new MKSequence(blackboard);
             IsEnemyInVisibleRange isEnemyInVisibleRange = new IsEnemyInVisibleRange(blackboard, this);
             ShootThatBunny shootThatBunny = new ShootThatBunny(blackboard, this);
             combatSequence.children.Add(isEnemyInVisibleRange);
             combatSequence.children.Add(shootThatBunny);
 
+            //Defender sequence
+            MKSequence controlPointCheck = new MKSequence(blackboard);
+            MoveToCP moveToCP = new MoveToCP(blackboard, this);
+            AmIInCP amIInCP = new AmIInCP(blackboard, this);
+            controlPointCheck.children.Add(moveToCP);
+            controlPointCheck.children.Add(amIInCP);
+            
+            //Root selector
             MKSelector rootSelector = new MKSelector(blackboard);
+            rootSelector.children.Add(controlPointCheck);
             rootSelector.children.Add(combatSequence);
 
             behaviourTree = new MKTree(rootSelector, blackboard);
@@ -57,6 +80,9 @@ namespace MortensKombat
         }
 
         public override string ToString() => "Defender";
+        #endregion
+
+        
 
     }
 }
