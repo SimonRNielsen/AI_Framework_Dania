@@ -14,7 +14,7 @@ namespace MortensKombat
     {
         #region Fields
         protected MKBlackboard blackboard;
-        private readonly float SUPPLYDATAINTERVAL = 0.5f;                   //Timer for renewing data
+        private readonly float SUPPLYDATAINTERVAL = 0.1f;                   //Timer for renewing data
         private readonly float INCOMINGDOT = 0.98f;                         //Dot value for close to directly towards this
         private static readonly float CLEARDATAINTERVAL = 1f;
         private static float lastTimeDataCleaned;

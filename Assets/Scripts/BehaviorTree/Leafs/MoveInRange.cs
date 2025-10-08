@@ -16,7 +16,7 @@ public class MoveInRange : MKNode
     public override NodeState Evaluate()
     {
 
-        if (Vector3.Distance(ai.Target.position, ai.transform.position) <= ai.ProjectileRange)
+        if (Vector3.Distance(ai.Target.Position, ai.transform.position) <= ai.ProjectileRange)
         {
 
             ai.StopMoving();
@@ -24,7 +24,7 @@ public class MoveInRange : MKNode
 
         }
 
-        ai.MoveTo(ai.Target.position);
+        ai.MoveTo(ai.Target.Position);
 
         return NodeState.Failure;
 
