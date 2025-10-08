@@ -117,6 +117,19 @@ public class MKBlackboard
     /// <param name="key">Removes data at location</param>
     public void RemoveKey(string key) => data.Remove(key);
 
+
+    public float RemoveObsoleteData()
+    {
+
+        List<string> keys = data.Where(x => x.Value is EnemyData enemyData && Time.time - enemyData.timestamp > 10f).Select(x => x.Key).ToList();
+
+        foreach (string key in keys)
+            RemoveKey(key);
+
+        return Time.time;
+
+    } 
+
 }
 
 
