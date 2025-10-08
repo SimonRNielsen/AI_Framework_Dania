@@ -49,8 +49,8 @@ namespace MortensKombat
 
             AmIInCP amIInCP = new AmIInCP(blackboard, this);
             MoveToCP moveToCP = new MoveToCP(blackboard, this);
-            goToCPSequence.children.Add(amIInCP);
             goToCPSequence.children.Add(moveToCP);
+            goToCPSequence.children.Add(amIInCP);
 
             //MoveAroundCP moveAroundCP = new MoveAroundCP(blackboard, this);
             //rootSelector.children.Add(moveAroundCP);
