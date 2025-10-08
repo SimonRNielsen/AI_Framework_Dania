@@ -7,18 +7,22 @@ using MortensKombat;
 
 public class MoveToCP : MKNode
 {
+    #region Fields
     private SuperMorten supMorten;
     ControlPoint controlPoint = ControlPoint.Instance;
+    #endregion
 
-
+    #region Constructor
     public MoveToCP(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
     {
         this.supMorten = mortenAI;
         this.controlPoint = ControlPoint.Instance;
     }
+    #endregion
 
 
 
+    #region Methods
     public override NodeState Evaluate()
     {
         Debug.Log($"{supMorten.name} moving toward ControlPoint");
@@ -48,6 +52,7 @@ public class MoveToCP : MKNode
 
 
         //Simple locked offset
+        //supMorten.TargetDestination = controlPoint.transform.position + new Vector3(15f, 0f, 0f);
         supMorten.TargetDestination = controlPoint.transform.position + new Vector3(15f, 0f, 0f);
         supMorten.MoveTo(supMorten.TargetDestination);
 
@@ -68,9 +73,9 @@ public class MoveToCP : MKNode
 
         //If it's interrupted it fails
         return NodeState.Failure;
-        
 
 
 
     }
+    #endregion
 }

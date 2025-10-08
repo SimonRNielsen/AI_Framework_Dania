@@ -6,14 +6,20 @@ using MortensKombat;
 
 public class AmIInCP : MKNode
 {
+    #region Fields
     private SuperMorten supMorten;
     private ControlPoint controlPoint;
+    #endregion
+
+    #region Constructor
     public AmIInCP(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
     {
         this.supMorten = mortenAI;
         this.controlPoint = ControlPoint.Instance;
     }
+    #endregion
 
+    #region Methods
     public override NodeState Evaluate()
     {
         //Sets arbitrary radius for CP
@@ -32,5 +38,6 @@ public class AmIInCP : MKNode
 
         
     }
+    #endregion
 }
 
