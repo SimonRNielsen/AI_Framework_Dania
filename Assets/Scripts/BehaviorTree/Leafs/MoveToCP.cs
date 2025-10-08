@@ -4,48 +4,73 @@ using UnityEngine;
 using UnityEngine.AI;
 using MortensKombat;
 
-// baseai.position - find egen position
-
-//Set destination 0,0 CP
-
-//Find path
-
-//Move
-
-//Check - succes
-
 
 public class MoveToCP : MKNode
 {
-    private SuperMorten mortenAI;
-    
+    private SuperMorten supMorten;
+    ControlPoint controlPoint = ControlPoint.Instance;
+
 
     public MoveToCP(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
     {
-        this.mortenAI = mortenAI;
+        this.supMorten = mortenAI;
+        this.controlPoint = ControlPoint.Instance;
     }
+
+
 
     public override NodeState Evaluate()
     {
+        Debug.Log($"{supMorten.name} moving toward ControlPoint");
 
-        //var enemies = ai.GetVisibleEnemiesSnapshot();
-        //if (enemies.Count > 0)
-        //{
 
-        //    ai.RefreshOrAcquireTarget();
+        //Checking for Control Point spawn
+        if (controlPoint == null)
+        {
+            Debug.Log("Missing control point");
+            return NodeState.Failure;
+        }
 
-        //    if (blackboard != null)
-        //    {
+        //Starting NavMesh agent
+        if (supMorten.IsStopped())
+        {
+            supMorten.SetStopped(false);
+        }
 
-        //        blackboard.SetValue(ai.MyDetectable.TeamID + enemyPosition, enemies[0].Position);
-        //        blackboard.SetValue(ai.MyDetectable.TeamID + enemyTime, Time.time);
 
-        //    }
+        //Sets target til Controlpoint (+x so we don't crash with the other team at 0,0) - Agent moves to Control point
 
-        //    return NodeState.Success;
 
-        //}
+        ////Random offset
+        //Vector2 randomOffset = Random.insideUnitCircle * 10f; //the number is radius
+        //Vector3 offset3D = new Vector3(randomOffset.x, 0f, randomOffset.y);
+        //supMorten.TargetDestination = controlPoint.transform.position + offset3D;
 
+
+        //Simple locked offset
+        supMorten.TargetDestination = controlPoint.transform.position + new Vector3(15f, 0f, 0f);
+        supMorten.MoveTo(supMorten.TargetDestination);
+
+        //Calculates distance between agent and control point
+        float distance = Vector3.Distance(supMorten.transform.position, supMorten.TargetDestination);
+
+        //Agent arrives at CP
+        if (distance < supMorten.ArrivalTreshold)
+        {
+            return NodeState.Success;
+        }
+
+        //Agent still moving, returns running
+        if (supMorten.HasPath() && !supMorten.IsStopped())
+        {
+            return NodeState.Running;
+        }
+
+        //If it's interrupted it fails
         return NodeState.Failure;
+        
+
+
+
     }
 }
