@@ -52,17 +52,28 @@ namespace MortensKombat
             combatSequence.children.Add(isEnemyInVisibleRange);
             combatSequence.children.Add(shootThatBunny);
 
-            //Defender sequence
+            //Defender Move to controlpoint sequence
             MKSequence controlPointCheck = new MKSequence(blackboard);
+            AmOutsideCp amOutsideCp = new AmOutsideCp(blackboard, this);
             MoveToCP moveToCP = new MoveToCP(blackboard, this);
-            AmIInCP amIInCP = new AmIInCP(blackboard, this);
+            controlPointCheck.children.Add(amOutsideCp);
             controlPointCheck.children.Add(moveToCP);
-            controlPointCheck.children.Add(amIInCP);
-            
+
+            //Defender moving around CP sequence
+            MKSequence moveAroundCPSequence = new MKSequence(blackboard);
+            AmIInCP amIInCP = new AmIInCP(blackboard, this);
+            MoveAroundCP moveAroundCP = new MoveAroundCP(blackboard, this);
+            moveAroundCPSequence.children.Add(amIInCP);
+            moveAroundCPSequence.children.Add(moveAroundCP);
+
+            MKSelector defenderSelector = new MKSelector(blackboard);
+            defenderSelector.children.Add(controlPointCheck);
+            defenderSelector.children.Add(moveAroundCP);
+
             //Root selector
             MKSelector rootSelector = new MKSelector(blackboard);
-            rootSelector.children.Add(controlPointCheck);
-            rootSelector.children.Add(combatSequence);
+            rootSelector.children.Add(combatSequence); //Prioritises shooting. Note that it still runs. 
+            rootSelector.children.Add(defenderSelector);
 
             behaviourTree = new MKTree(rootSelector, blackboard);
 
