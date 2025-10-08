@@ -24,13 +24,14 @@ namespace MortensKombat
         private readonly float arrivalTreshold = 0.5f;
         private Vector3 targetDestination;
         protected MKTree behaviourTree;
-
+        private Vector3 spawnPosition = Vector3.zero;                       //Spawn position for specific position needs to be set at the under class in construction
         #endregion
 
         #region Properties
         public EnemyData Target { get; set; }
         public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
         public float ArrivalTreshold { get => arrivalTreshold; }
+        public Vector3 SpawnPosition { get => spawnPosition; set => spawnPosition = value; }
 
         #endregion
 
@@ -53,7 +54,7 @@ namespace MortensKombat
             FlagEnter += SpottedFlag;                   //Records data on enemy flag
             BallDetected += IsBallArmedAndNotHandled;   //Dataprocessing method that invokes BallDetectedVector if ball is dangerous
             BallDetectedVector += IsBallIncoming;       //Transmits data to all teammembers
-            
+
             timeSinceDataUpdate = SUPPLYDATA;           //Instant update on Execute
 
         }
@@ -83,7 +84,7 @@ namespace MortensKombat
 
             }
 
-            if (behaviourTree != null) 
+            if (behaviourTree != null)
                 behaviourTree.Tick();
 
         }

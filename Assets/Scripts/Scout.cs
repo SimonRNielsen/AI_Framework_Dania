@@ -9,6 +9,7 @@ namespace MortensKombat
     /// </summary>
     public class Scout : SuperMorten
     {
+
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
         /// </summary>
@@ -21,6 +22,7 @@ namespace MortensKombat
             AllocateStat(StatType.DodgeCooldown, 0);
             AllocateStat(StatType.ReloadSpeed, 0);
 
+            SpawnPosition = transform.position;
         }
 
         /// <summary>
@@ -35,10 +37,15 @@ namespace MortensKombat
             MKSequence scouting = new MKSequence(blackboard);
             MoveToScouting moveToScouting = new MoveToScouting(blackboard, this);
 
+            MKSequence fleeing = new MKSequence(blackboard);
+            Flee flee = new Flee(blackboard, this);
+
+            fleeing.children.Add(flee);
             scouting.children.Add(moveToScouting);
 
             MKSelector rootSelector = new MKSelector(blackboard);
             rootSelector.children.Add(scouting);
+            rootSelector.children.Add(fleeing);
 
             behaviourTree = new MKTree(rootSelector, blackboard);
                 }
