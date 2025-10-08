@@ -1,12 +1,12 @@
 using UnityEngine;
 using MortensKombat;
 using System.Linq;
-using AIGame.Core;
 
 public class IsEnemyInVisibleRange : MKNode
 {
 
     private SuperMorten ai;
+    private readonly float recentData;
 
     public IsEnemyInVisibleRange(MKBlackboard blackboard, SuperMorten parent) : base(blackboard)
     {
@@ -32,9 +32,9 @@ public class IsEnemyInVisibleRange : MKNode
 
         }
 
-        EnemyData temp = blackboard.GetEnemies(ai).Where(x => Time.time - x.timestamp < 3).OrderBy(x => Vector3.Distance(ai.transform.position, x.position)).FirstOrDefault();
+        EnemyData temp = blackboard.GetEnemies(ai).Where(x => Time.time - x.timestamp < recentData).OrderBy(x => Vector3.Distance(ai.transform.position, x.Position)).FirstOrDefault();
 
-        if (temp != null && Vector3.Distance(temp.position, ai.transform.position) <= ai.ProjectileRange)
+        if (temp != null && Vector3.Distance(temp.Position, ai.transform.position) <= ai.ProjectileRange)
         {
 
             ai.Target = temp;
