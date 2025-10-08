@@ -45,20 +45,21 @@ namespace MortensKombat
 
             base.StartAI();
 
-            
+            //Attack sequence
             MKSequence combatSequence = new MKSequence(blackboard);
             IsEnemyInVisibleRange isEnemyInVisibleRange = new IsEnemyInVisibleRange(blackboard, this);
             ShootThatBunny shootThatBunny = new ShootThatBunny(blackboard, this);
             combatSequence.children.Add(isEnemyInVisibleRange);
             combatSequence.children.Add(shootThatBunny);
 
-
+            //Defender sequence
             MKSequence controlPointCheck = new MKSequence(blackboard);
-            AmIInCP amIInCP = new AmIInCP(blackboard, this);
             MoveToCP moveToCP = new MoveToCP(blackboard, this);
-            controlPointCheck.children.Add(amIInCP);
+            AmIInCP amIInCP = new AmIInCP(blackboard, this);
             controlPointCheck.children.Add(moveToCP);
-  
+            controlPointCheck.children.Add(amIInCP);
+            
+            //Root selector
             MKSelector rootSelector = new MKSelector(blackboard);
             rootSelector.children.Add(controlPointCheck);
             rootSelector.children.Add(combatSequence);

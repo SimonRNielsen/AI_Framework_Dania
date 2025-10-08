@@ -24,22 +24,31 @@ public class MoveToCP : MKNode
         Debug.Log($"{supMorten.name} moving toward ControlPoint");
 
 
-        ////Checking for Control Point spawn
-        //if (supMorten == null ||controlPoint == null)
-        //{
-        //    Debug.Log("Missing control point");
-        //    return NodeState.Failure;
-        //}
+        //Checking for Control Point spawn
+        if (controlPoint == null)
+        {
+            Debug.Log("Missing control point");
+            return NodeState.Failure;
+        }
 
-        ////Starting NavMesh agent
-        //if (supMorten.IsStopped())
-        //{
-        //    supMorten.SetStopped(false);
-        //}
+        //Starting NavMesh agent
+        if (supMorten.IsStopped())
+        {
+            supMorten.SetStopped(false);
+        }
 
 
-        //Agent moves to Control point
-        supMorten.TargetDestination = controlPoint.transform.position;
+        //Sets target til Controlpoint (+x so we don't crash with the other team at 0,0) - Agent moves to Control point
+
+
+        ////Random offset
+        //Vector2 randomOffset = Random.insideUnitCircle * 10f; //the number is radius
+        //Vector3 offset3D = new Vector3(randomOffset.x, 0f, randomOffset.y);
+        //supMorten.TargetDestination = controlPoint.transform.position + offset3D;
+
+
+        //Simple locked offset
+        supMorten.TargetDestination = controlPoint.transform.position + new Vector3(15f, 0f, 0f);
         supMorten.MoveTo(supMorten.TargetDestination);
 
         //Calculates distance between agent and control point
@@ -51,11 +60,11 @@ public class MoveToCP : MKNode
             return NodeState.Success;
         }
 
-        ////Agent still moving, returns running
-        //if (supMorten.HasPath() && !supMorten.IsStopped())
-        //{
-        //    return NodeState.Running;
-        //}
+        //Agent still moving, returns running
+        if (supMorten.HasPath() && !supMorten.IsStopped())
+        {
+            return NodeState.Running;
+        }
 
         //If it's interrupted it fails
         return NodeState.Failure;
