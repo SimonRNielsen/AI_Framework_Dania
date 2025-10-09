@@ -12,7 +12,7 @@ public class MoveToScouting : MKNode
     private List<Vector3> positions = new List<Vector3>();
     private int numberPosition = 0;
     private Vector3 cpPosition;
-    private float offset = 0.3f;
+    private float offset;
     //private float enemyRange = 30f;
     private float edgePosition = 70f;
     private Vector3 spawnPosition;
@@ -26,6 +26,15 @@ public class MoveToScouting : MKNode
         this.mortenAI = superMorten;
 
         spawnPosition = mortenAI.SpawnPosition;
+
+        if (spawnPosition.x > 0) //Blue
+        {
+            offset = 0.2f;
+        }
+        else //Red
+        {
+            offset = 0.19f;
+        }
     }
 
     #endregion
@@ -119,9 +128,9 @@ public class MoveToScouting : MKNode
         float zAksis = edgePosition;
 
         positions.Add(new Vector3(xAksis, spawnPosition.y, zAksis));
-        positions.Add(new Vector3(spawnPosition.x * (offset + 0.1f), spawnPosition.y, spawnPosition.z));
+        positions.Add(new Vector3(spawnPosition.x * (offset), spawnPosition.y, spawnPosition.z));
         positions.Add(new Vector3(xAksis, spawnPosition.y, -zAksis));
-        positions.Add(new Vector3(spawnPosition.x * (offset + 0.1f), spawnPosition.y, spawnPosition.z));
+        positions.Add(new Vector3(spawnPosition.x * (offset), spawnPosition.y, spawnPosition.z));
 
     }
 

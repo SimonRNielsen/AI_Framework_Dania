@@ -10,7 +10,7 @@ public class MoveToCP : MKNode
     #region Fields
     private SuperMorten supMorten;
     ControlPoint controlPoint = ControlPoint.Instance;
-    private float CPArrivalThreshold = 10f;
+    private float CPArrivalThreshold = 3f;
     #endregion
 
     #region Constructor

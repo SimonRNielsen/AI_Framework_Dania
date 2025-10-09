@@ -17,7 +17,7 @@ namespace MortensKombat
         /// <returns>An array containing the AI types to spawn.</returns>
         protected override System.Type[] GetAgentTypes()
         {
-            return new System.Type[] { typeof(Defender), typeof(Attacker), typeof(Scout), typeof(Defender), typeof(Attacker) };
+            return new System.Type[] { /*typeof(Defender), typeof(Attacker),*/ typeof(Scout), /*typeof(Attacker), typeof(Attacker)*/ };
         }
     }
 }
