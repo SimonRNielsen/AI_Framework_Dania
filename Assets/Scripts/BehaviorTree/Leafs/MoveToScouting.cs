@@ -57,7 +57,7 @@ public class MoveToScouting : MKNode
             }
             else
             {
-                mortenAI.TargetDestination = positions[1];
+                mortenAI.TargetDestination = positions[2];
             }
         }
 
@@ -119,7 +119,9 @@ public class MoveToScouting : MKNode
         float zAksis = edgePosition;
 
         positions.Add(new Vector3(xAksis, spawnPosition.y, zAksis));
+        positions.Add(new Vector3(spawnPosition.x * (offset + 0.1f), spawnPosition.y, spawnPosition.z));
         positions.Add(new Vector3(xAksis, spawnPosition.y, -zAksis));
+        positions.Add(new Vector3(spawnPosition.x * (offset + 0.1f), spawnPosition.y, spawnPosition.z));
 
     }
 

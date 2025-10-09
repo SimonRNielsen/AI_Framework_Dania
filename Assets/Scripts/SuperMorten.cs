@@ -33,7 +33,6 @@ namespace MortensKombat
         public EnemyData Target { get; set; }
         public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
         public float ArrivalTreshold { get => arrivalTreshold; }
-        public Vector3 SpawnPosition { get => spawnPosition; set => spawnPosition = value; }
         public bool EnemyTakingCP { get; set; } = false;
         public Vector3 SpawnPosition { get => spawnPosition; }
 
@@ -61,6 +60,7 @@ namespace MortensKombat
             EnemyEnterVision += SupplyData;             //Immediately transmits data to blackboard
             ControlPoint.Instance.PointChanged += OnCPStateChange;
 
+            spawnPosition = transform.position;
         }
 
         private void OnCPStateChange(CPState cpState)

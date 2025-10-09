@@ -13,6 +13,7 @@ public class Flee : MKNode
     private Vector3 spawnPosition;
     private Vector3 fleePosition;
     private float addFlee = 5;
+    private float fleeX = 5f;
 
     #endregion
 
@@ -31,9 +32,9 @@ public class Flee : MKNode
 
         fleePosition = spawnPosition;
 
+        //Moving away from the enemy
         if (closestEnemy.HasValue)
         {
-
             Vector3 enemy = closestEnemy.Value;
 
             if (enemy.z > mortenAI.transform.position.z)
@@ -46,7 +47,16 @@ public class Flee : MKNode
             }
         }
 
-        //throw new System.Exception(fleePosition.ToString());
+        //Walking back to the spawn point
+        if (mortenAI.transform.position.x > 0)
+        {
+            fleePosition.x = mortenAI.transform.position.x + fleeX;
+        }
+        else
+        {
+            fleePosition.x = mortenAI.transform.position.x - fleeX;
+        }
+
 
         mortenAI.TargetDestination = fleePosition;
 
