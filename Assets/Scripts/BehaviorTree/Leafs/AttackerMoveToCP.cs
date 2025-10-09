@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using MortensKombat;
 
 
-public class MoveToCP : MKNode
+public class AttackerMoveToCP : MKNode
 {
     #region Fields
     private SuperMorten supMorten;
@@ -14,7 +14,7 @@ public class MoveToCP : MKNode
     #endregion
 
     #region Constructor
-    public MoveToCP(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
+    public AttackerMoveToCP(MKBlackboard blackboard, SuperMorten mortenAI) : base(blackboard)
     {
         this.supMorten = mortenAI;
         this.controlPoint = ControlPoint.Instance;
