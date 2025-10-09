@@ -234,13 +234,12 @@ namespace MortensKombat
         public PerceivedAgent enemy;
         private Vector3 oldPosition = Vector3.zero;
 
-        public Vector3 Direction
+        public Vector3 OldPosition
         {
             get
             {
-                if (oldPosition != Vector3.zero) return (position - oldPosition);
-
-                return Vector3.zero;
+                
+                return oldPosition;
 
             }
         }

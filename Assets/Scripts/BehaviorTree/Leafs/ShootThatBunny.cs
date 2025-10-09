@@ -20,9 +20,12 @@ namespace MortensKombat
             if (baseAI.Target != null)
             {
 
-                //baseAI.FaceTarget(baseAI.Target.Position);
+                float distanceToEnemyPosition = Vector3.Distance(baseAI.Target.Position, baseAI.transform.position);
+                float movingTowards = 0;
+                if (baseAI.Target.OldPosition != Vector3.zero && distanceToEnemyPosition < Vector3.Distance(baseAI.transform.position, baseAI.Target.OldPosition))
+                    movingTowards = -3;
 
-                if (baseAI.ThrowBallInDirection(baseAI.Target.Position - baseAI.transform.position, Mathf.Max(magicAngle / 2, magicAngle * (Vector3.Distance(baseAI.Target.Position, baseAI.transform.position) / baseAI.ProjectileRange))))
+                if (baseAI.ThrowBallInDirection(baseAI.Target.Position - baseAI.transform.position, Mathf.Max((magicAngle / 2) + movingTowards, magicAngle * (distanceToEnemyPosition / baseAI.ProjectileRange) + movingTowards)))
                     return NodeState.Success;
 
 
@@ -31,6 +34,6 @@ namespace MortensKombat
             return NodeState.Failure;
         }
 
-        
+
     }
 }

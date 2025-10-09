@@ -8,7 +8,7 @@ namespace MortensKombat
     public class AquireTarget : MKNode
     {
         SuperMorten baseAI;
-        private readonly float dataFreshness = 2f;
+        private readonly float dataFreshness = 1.5f;
         public AquireTarget(MKBlackboard blackboard, SuperMorten ai) : base(blackboard)
         {
             baseAI = ai;
