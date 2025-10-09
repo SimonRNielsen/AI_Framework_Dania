@@ -12,11 +12,11 @@ public class MoveToScouting : MKNode
     private List<Vector3> positions = new List<Vector3>();
     private int numberPosition = 0;
     private Vector3 cpPosition;
-    private float offset = 0.25f;
-    private float enemyRange = 30f;
+    private float offset = 0.3f;
+    //private float enemyRange = 30f;
     private float edgePosition = 70f;
-
     private Vector3 spawnPosition;
+
 
     #endregion
 
@@ -24,6 +24,8 @@ public class MoveToScouting : MKNode
     public MoveToScouting(MKBlackboard blackboard, SuperMorten superMorten) : base(blackboard)
     {
         this.mortenAI = superMorten;
+
+        spawnPosition = mortenAI.SpawnPosition;
     }
 
     #endregion
@@ -55,12 +57,11 @@ public class MoveToScouting : MKNode
             }
             else
             {
-                mortenAI.TargetDestination = positions[1];
+                mortenAI.TargetDestination = positions[2];
             }
-
         }
 
-
+        #region Delected
         //Vector3? closestEnemy = blackboard.GetEnemies(mortenAI)
         //    .OrderBy(x => Vector3.Distance(mortenAI.transform.position, x.position))
         //    .FirstOrDefault()?.position;
@@ -71,13 +72,12 @@ public class MoveToScouting : MKNode
         //    {
         //        if (Vector3.Distance(closestEnemy.Value, mortenAI.transform.position) < enemyRange)
         //        {
-
         //            return NodeState.Failure;
 
         //        }
         //    }
         //}
-
+        #endregion
 
         if (HasReachedDestination())        //If the target destination has been reached set the target destination to the next position
         {
@@ -109,9 +109,6 @@ public class MoveToScouting : MKNode
     /// </summary>
     private void Positions()
     {
-        //Getting the start position
-        spawnPosition = mortenAI.SpawnPosition;
-
         //Getting the control point position
         var controlPoint = ControlPoint.Instance;
         cpPosition = controlPoint.transform.position;
@@ -122,7 +119,10 @@ public class MoveToScouting : MKNode
         float zAksis = edgePosition;
 
         positions.Add(new Vector3(xAksis, spawnPosition.y, zAksis));
+        positions.Add(new Vector3(spawnPosition.x * (offset + 0.1f), spawnPosition.y, spawnPosition.z));
         positions.Add(new Vector3(xAksis, spawnPosition.y, -zAksis));
+        positions.Add(new Vector3(spawnPosition.x * (offset + 0.1f), spawnPosition.y, spawnPosition.z));
+
     }
 
     #endregion

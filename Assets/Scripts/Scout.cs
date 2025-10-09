@@ -22,8 +22,8 @@ namespace MortensKombat
             AllocateStat(StatType.DodgeCooldown, 0);
             AllocateStat(StatType.ReloadSpeed, 0);
 
-            SpawnPosition = transform.position;
         }
+
 
         /// <summary>
         /// Called once when the agent starts.
@@ -63,6 +63,8 @@ namespace MortensKombat
 
             base.ExecuteAI();
 
+
+            SupplyData();
         }
 
 
