@@ -37,10 +37,10 @@ public class MoveToCP : MKNode
         }
 
         //Starting NavMesh agent
-        if (supMorten.IsStopped())
-        {
-            supMorten.SetStopped(false);
-        }
+        //if (supMorten.IsStopped())
+        //{
+        //  //  supMorten.SetStopped(false);
+        //}
 
 
         //Sets target til Controlpoint (+x so we don't crash with the other team at 0,0) - Agent moves to Control point

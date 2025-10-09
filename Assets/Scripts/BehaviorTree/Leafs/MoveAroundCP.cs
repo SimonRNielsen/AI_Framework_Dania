@@ -16,7 +16,7 @@ namespace MortensKombat
         {
             if (destination == controlPointPosition)
             {
-                destination = new Vector3(Random.Range(controlPointPosition.x - 30, controlPointPosition.x + 30), baseAI.transform.position.y, Random.Range(controlPointPosition.y - 30, controlPointPosition.y + 30));
+                destination = new Vector3(Random.Range(controlPointPosition.x - 30, controlPointPosition.x + 30), baseAI.transform.position.y, Random.Range(controlPointPosition.y-35, controlPointPosition.y + 23));
                 Debug.Log($"New destination set to {destination}");
             }
             if (Vector3.Distance(baseAI.transform.position, destination) > baseAI.ArrivalTreshold)

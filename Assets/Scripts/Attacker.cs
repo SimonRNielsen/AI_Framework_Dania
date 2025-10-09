@@ -45,12 +45,18 @@ namespace MortensKombat
             offenceSequence.children.Add(moveInRange);
             offenceSequence.children.Add(shootThatBunny);
 
-            //Defender Move to controlpoint sequence
-            MKSequence controlPointCheck = new MKSequence(blackboard);
+            //Attacker Move to controlpoint selector and sequence
+
+            MKSequence controlPointCheckSequence = new MKSequence(blackboard); //Sequence: Outside CP? YES -> move to cp
             AmOutsideCp amOutsideCp = new AmOutsideCp(blackboard, this);
-            AttackerMoveToCP attackerMoveToCP = new AttackerMoveToCP(blackboard, this);
-            controlPointCheck.children.Add(amOutsideCp);
-            controlPointCheck.children.Add(attackerMoveToCP);
+            MoveToCP moveToCP = new MoveToCP(blackboard, this);
+            controlPointCheckSequence.children.Add(amOutsideCp);
+            controlPointCheckSequence.children.Add(moveToCP);
+            
+            MKSelector contestedControlPointSelector = new MKSelector(blackboard); //Selector: Is CP ours? NO -> Run controlPointCheckSequence 
+            IsCPContested isCPContested = new IsCPContested(blackboard, this);
+            contestedControlPointSelector.children.Add(isCPContested);
+            contestedControlPointSelector.children.Add(controlPointCheckSequence);
 
             //Defender moving around CP sequence
             MKSequence moveAroundCPSequence = new MKSequence(blackboard);
@@ -59,11 +65,8 @@ namespace MortensKombat
             moveAroundCPSequence.children.Add(amIInCP);
             moveAroundCPSequence.children.Add(attackerMoveAround);
 
-            MKSelector defenderSelector = new MKSelector(blackboard);
-            MoveAroundCP moveAroundCP = new MoveAroundCP(blackboard, this);
-            defenderSelector.children.Add(controlPointCheck);
-            defenderSelector.children.Add(moveAroundCP);
-            rootSelector.children.Add(defenderSelector);
+            rootSelector.children.Add(contestedControlPointSelector);
+            rootSelector.children.Add(moveAroundCPSequence);
 
             behaviourTree = new MKTree(rootSelector, blackboard);
 
