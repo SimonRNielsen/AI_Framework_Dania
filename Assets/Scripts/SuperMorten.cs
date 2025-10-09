@@ -23,6 +23,7 @@ namespace MortensKombat
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
         private static bool attackerNameTaken;
         private static bool defenderNameTaken;
+        private string[] attackerNames = new string[3] { "Crusader Morten", "Munke Morten", "Martin" };
         private readonly float arrivalTreshold = 1.5f;
         private Vector3 targetDestination;
         protected MKTree behaviourTree;
@@ -35,6 +36,8 @@ namespace MortensKombat
         public float ArrivalTreshold { get => arrivalTreshold; }
         public bool EnemyTakingCP { get; set; } = false;
         public Vector3 SpawnPosition { get => spawnPosition; }
+        private static int NameInArray { get; set; } = -1;
+        
 
         #endregion
 
@@ -153,7 +156,7 @@ namespace MortensKombat
             if (!CanDodge() || id != MyDetectable.TeamID) return;                                                                                                                       //Early return if unable to dodge (or unnecessary because it's own teams ball)
 
             Vector3 fromOriginToThis = (transform.position - ballOrigin).normalized;                                                                                                    //Calculate velocity normalized compared to this
-            float dot = Vector3.Dot(ballVelocity.normalized, fromOriginToThis);                                                                                                                    //Determine Dot value of direction required to hit this, and balls direction
+            float dot = Vector3.Dot(ballVelocity.normalized, fromOriginToThis);                                                                                                         //Determine Dot value of direction required to hit this, and balls direction
 
             //Debug.LogWarning($"Dot value for {MyName} was: {dot}"); //Debugging and Testing
 
@@ -174,11 +177,14 @@ namespace MortensKombat
                 case "Scout":
                     return "Undercover Morten";
                 case "Defender":
-                    defenderNameTaken = !defenderNameTaken;
-                    return defenderNameTaken ? "Crusader Morten" : "Holy Morten";
+                    //defenderNameTaken = !defenderNameTaken;
+                    return /*defenderNameTaken ? "Crusader Morten" :*/ "Holy Morten";
                 case "Attacker":
-                    attackerNameTaken = !attackerNameTaken;
-                    return attackerNameTaken ? "Munke Morten" : "Martin";
+                    if (NameInArray == attackerNames.Length - 1)
+                        NameInArray = -1;
+                    NameInArray++;
+                    //attackerNameTaken = !attackerNameTaken;
+                    return /*attackerNameTaken ? "Munke Morten" : "Martin"*/ attackerNames[NameInArray];
                 default:
                     return ToString();
             }
