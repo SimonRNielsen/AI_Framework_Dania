@@ -26,21 +26,21 @@ public class MoveToCP : MKNode
     #region Methods
     public override NodeState Evaluate()
     {
-        Debug.Log($"{supMorten.name} moving toward ControlPoint");
+        //Debug.Log($"{supMorten.name} moving toward ControlPoint");
 
 
         //Checking for Control Point spawn
         if (controlPoint == null)
         {
-            Debug.Log("Missing control point");
+            //Debug.Log("Missing control point");
             return NodeState.Failure;
         }
 
         //Starting NavMesh agent
-        if (supMorten.IsStopped())
-        {
-            supMorten.SetStopped(false);
-        }
+        //if (supMorten.IsStopped())
+        //{
+        //  //  supMorten.SetStopped(false);
+        //}
 
 
         //Sets target til Controlpoint (+x so we don't crash with the other team at 0,0) - Agent moves to Control point
@@ -63,7 +63,7 @@ public class MoveToCP : MKNode
         //Agent arrives at CP
         if (distance < CPArrivalThreshold)
         {
-            Debug.Log("MoveToCP succes");
+            //Debug.Log("MoveToCP succes");
             return NodeState.Success;
         }
 
