@@ -1,12 +1,14 @@
 using AIGame.Core;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace MortensKombat
 {
     public class AquireTarget : MKNode
     {
         SuperMorten baseAI;
+        private readonly float dataFreshness = 2f;
         public AquireTarget(MKBlackboard blackboard, SuperMorten ai) : base(blackboard)
         {
             baseAI = ai;
@@ -14,8 +16,8 @@ namespace MortensKombat
 
         public override NodeState Evaluate()
         {
-            Debug.Log("Trying to aquire taget...");
-            List<EnemyData> enemies = blackboard.GetEnemies(baseAI);
+            //Debug.Log("Trying to aquire taget...");
+            List<EnemyData> enemies = blackboard.GetEnemies(baseAI).Where(x => Time.time - x.timestamp <= dataFreshness).ToList();
             if (enemies.Count > 0)
             {
                 EnemyData targetEnemy = enemies[0];
@@ -30,10 +32,11 @@ namespace MortensKombat
                     }
                 }
                 baseAI.Target = targetEnemy;
-                Debug.Log($"Target set, enemy with ID: {targetEnemy.id}");
+                //Debug.Log($"Target set, enemy with ID: {targetEnemy.id}");
                 return NodeState.Success;
             }
-            Debug.Log("No target could be aquired: no enemies found in blackboard");
+            baseAI.Target = null;
+            //Debug.Log("No target could be aquired: no enemies found in blackboard");
             return NodeState.Failure;
         }
     }

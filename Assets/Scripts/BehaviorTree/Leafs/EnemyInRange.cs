@@ -32,8 +32,8 @@ public class EnemyInrange : MKNode
 
         //Finding closests enemy from blackboard
         Vector3? closestEnemy = blackboard.GetEnemies(supMorten)
-            .OrderBy(x => Vector3.Distance(supMorten.transform.position, x.position))
-            .FirstOrDefault()?.position;
+            .OrderBy(x => Vector3.Distance(supMorten.transform.position, x.Position))
+            .FirstOrDefault()?.Position;
 
         if (closestEnemy.HasValue && closestEnemy != Vector3.zero)
         {
@@ -41,13 +41,13 @@ public class EnemyInrange : MKNode
                 if (Vector3.Distance(closestEnemy.Value, supMorten.transform.position) < enemyRange)
                 {
                 
-                    Debug.Log("IN RANGE SUCCESS");
+                    //Debug.Log("IN RANGE SUCCESS");
                     return NodeState.Success;
 
                 }
            
         }
-        Debug.Log("IN RANGE FAIL");
+        //Debug.Log("IN RANGE FAIL");
         return NodeState.Failure;
     }
     #endregion

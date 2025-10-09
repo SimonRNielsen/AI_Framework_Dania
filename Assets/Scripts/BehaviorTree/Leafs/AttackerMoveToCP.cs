@@ -26,13 +26,13 @@ public class AttackerMoveToCP : MKNode
     #region Methods
     public override NodeState Evaluate()
     {
-        Debug.Log($"{supMorten.name} moving toward ControlPoint");
+        //Debug.Log($"{supMorten.name} moving toward ControlPoint");
 
 
         //Checking for Control Point spawn
         if (controlPoint == null)
         {
-            Debug.Log("Missing control point");
+            //Debug.Log("Missing control point");
             return NodeState.Failure;
         }
 

@@ -225,13 +225,25 @@ namespace MortensKombat
 
     public class EnemyData
     {
-
-        public Vector3 position = Vector3.zero;
+        private float oldVectorTimeStamp = 0f;
+        private float interval = 0.5f;
+        private Vector3 position = Vector3.zero;
         public float timestamp;
         public int id;
         public int recordedFrame;
         public PerceivedAgent enemy;
-        public Vector3 oldPosition = Vector3.zero;
+        private Vector3 oldPosition = Vector3.zero;
+
+        public Vector3 Direction
+        {
+            get
+            {
+                if (oldPosition != Vector3.zero) return (position - oldPosition);
+
+                return Vector3.zero;
+
+            }
+        }
 
         public Vector3 Position
         {
@@ -240,8 +252,13 @@ namespace MortensKombat
             set
             {
 
-                if (position != Vector3.zero)
+                if (position != Vector3.zero && Time.time - oldVectorTimeStamp > interval)
+                {
+
+                    oldVectorTimeStamp = Time.time;
                     oldPosition = position;
+
+                }
 
                 position = value;
 
