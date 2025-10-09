@@ -33,7 +33,7 @@ namespace MortensKombat
         public EnemyData Target { get; set; }
         public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
         public float ArrivalTreshold { get => arrivalTreshold; }
-        public Vector3 SpawnPosition { get => spawnPosition; set => spawnPosition = value; }
+        public Vector3 SpawnPosition { get => spawnPosition; }
 
         #endregion
 
@@ -57,6 +57,7 @@ namespace MortensKombat
             BallDetected += IsBallArmedAndNotHandled;   //Dataprocessing method that invokes BallDetectedVector if ball is dangerous
             BallDetectedVector += IsBallIncoming;       //Transmits data to all teammembers
             EnemyEnterVision += SupplyData;             //Immediately transmits data to blackboard
+            spawnPosition = transform.position;         //Setting the spawn position
 
         }
 

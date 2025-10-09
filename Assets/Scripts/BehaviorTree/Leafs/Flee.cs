@@ -12,6 +12,7 @@ public class Flee : MKNode
     private SuperMorten mortenAI;
     private Vector3 spawnPosition;
     private Vector3 fleePosition;
+    private float addFlee = 5;
 
     #endregion
 
@@ -19,7 +20,8 @@ public class Flee : MKNode
     {
         this.mortenAI = mortenAI;
 
-        this.spawnPosition = mortenAI.SpawnPosition;
+        spawnPosition = mortenAI.SpawnPosition;
+
     }
 
     public override NodeState Evaluate()
@@ -36,23 +38,21 @@ public class Flee : MKNode
 
             if (enemy.z > mortenAI.transform.position.z)
             {
-                fleePosition.x = enemy.x + 60;
+                fleePosition.z = enemy.z - addFlee;
             }
             else
             {
-                fleePosition.x = enemy.x - 60;
+                fleePosition.z = enemy.z + addFlee;
             }
         }
 
-            //throw new System.Exception(fleePosition.ToString());
+        //throw new System.Exception(fleePosition.ToString());
 
         mortenAI.TargetDestination = fleePosition;
 
-        //mortenAI.FaceTarget(-spawnPosition);
+        mortenAI.FaceTarget(-mortenAI.SpawnPosition);
 
-        //mortenAI.StrafeTo(mortenAI.TargetDestination);
-
-        mortenAI.MoveTo(spawnPosition);
+        mortenAI.StrafeTo(mortenAI.TargetDestination);
 
         return NodeState.Success;
     }
