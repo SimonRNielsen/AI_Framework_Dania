@@ -18,8 +18,8 @@ namespace MortensKombat
         protected override void ConfigureStats()
         {
 
-            AllocateStat(StatType.Speed, 10); //5
-            AllocateStat(StatType.ProjectileRange, 5); //10
+            AllocateStat(StatType.Speed, 5); //5
+            AllocateStat(StatType.ProjectileRange, 10); //10
             AllocateStat(StatType.VisionRange, 1);
             AllocateStat(StatType.DodgeCooldown, 0);
             AllocateStat(StatType.ReloadSpeed, 4);

@@ -24,12 +24,6 @@ namespace MortensKombat
         private float areaRadius = 15; //15//40
 
 
-
-        ////patrol area
-        //private Vector3 redCornerA = new Vector3(300, 22, 0);
-        //private Vector3 redCornerC = new Vector3(5, 5, 0);
-        //private Vector3 blueCornerA = new Vector3(0, 100, 0);
-        //private Vector3 blueCornerC = new Vector3(0, 200, 0);
         #endregion
 
         #region Constructor
@@ -42,112 +36,12 @@ namespace MortensKombat
         #endregion
 
         #region Methods
-        //    public override NodeState Evaluate()
-        //    {
-        //        Debug.Log("UWU");
-
-        //        Vector3 cornerA, cornerC;
-
-        //        if (IsTeamRed())
-        //        {
-        //            cornerA = redCornerA;
-        //            cornerC = redCornerA;
-        //        }
-        //        else
-        //        {
-        //            cornerA = blueCornerA;
-        //            cornerC = blueCornerC;
-        //        }
-
-        //        if (destination == Vector3.zero || Vector3.Distance(baseAI.transform.position, destination) < baseAI.ArrivalTreshold )
-        //        {
-        //            destination = GetRandomPoint(cornerA, cornerC, baseAI.transform.position.y);
-        //            baseAI.MoveTo(destination);
-
-        //            Debug.Log("sUCCES WUHUUU");
-        //            return NodeState.Success;
-        //        }
-
-
-        //        //if (Vector3.Distance(baseAI.transform.position, destination) > baseAI.ArrivalTreshold)
-        //        //{
-        //        //    baseAI.MoveTo(destination);
-
-        //        //    Debug.Log("MOVE RUNNING");
-        //        //    return NodeState.Running;
-        //        //}
-
-        //        return NodeState.Failure;
-
-
-
-
-        //    }
-
-        //    public bool IsTeamRed()
-        //    {
-        //        Debug.Log("RED");
-        //        return baseAI.MyDetectable.TeamID == Team.Red;
-        //    }
-
-        //    public Vector3 GetRandomPoint(Vector3 cornerA, Vector3 cornerC, float yLevel)
-        //    {
-        //        float minX = Mathf.Min(cornerA.x, cornerC.x);
-        //        float maxX = Mathf.Max(cornerA.x, cornerC.x);
-
-        //        float minZ = Mathf.Min(cornerA.z, cornerC.z);
-        //        float maxZ = Mathf.Max(cornerA.z, cornerC.z);
-
-        //        Debug.Log("RANDOM POINT");
-
-        //        return new Vector3(Random.Range(minX, maxX), yLevel, Random.Range(minZ, maxZ));
-        //    }
+        
 
 
             public override NodeState Evaluate()
             {
-            ////    bool isRed = IsTeamRed();
-            ////    Vector3 center = isRed ? redAreaA : blueAreaA;
-
-            ////    Vector2 offset = Random.insideUnitCircle * 20f; //the number is radius
-            ////    Vector3 offset3D = new Vector3(offset.x, 0f, offset.y);
-            ////    baseAI.TargetDestination = center + offset3D + new Vector3(5, 0, 5);
-            ////    baseAI.MoveTo(baseAI.TargetDestination);
-
-
-
-            ////    float distance = Vector3.Distance(baseAI.transform.position, baseAI.TargetDestination);
-
-            ////    if (distance < /*areaRadius*/ baseAI.ArrivalTreshold)
-            ////    {
-            ////        Debug.Log("WUHU SUCCES");
-            ////        return NodeState.Success;
-            ////    }
-
-            ////    //if (baseAI.HasPath() && !baseAI.IsStopped())
-            ////    //{
-            ////    //    Debug.Log("WUHU RUNNING");
-
-            ////    //    return NodeState.Running;
-            ////    //}
-
-            ////    Debug.Log("WUHU FAIL");
-
-            ////    return NodeState.Failure;
-
-
-
-
-            ////        //throw new System.NotImplementedException();
-            ////    }
-
-            ////private bool IsTeamRed()
-            ////{
-            ////    return baseAI.MyDetectable.TeamID == Team.Red;
-            ////
-            ///
-
-
+            
 
             bool isRed = IsTeamRed();
             Vector3 center = isRed ? redAreaA : blueAreaA;
