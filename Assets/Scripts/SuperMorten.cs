@@ -33,6 +33,8 @@ namespace MortensKombat
         public EnemyData Target { get; set; }
         public Vector3 TargetDestination { get => targetDestination; set => targetDestination = value; }
         public float ArrivalTreshold { get => arrivalTreshold; }
+        public Vector3 SpawnPosition { get => spawnPosition; set => spawnPosition = value; }
+        public bool EnemyTakingCP { get; set; } = false;
         public Vector3 SpawnPosition { get => spawnPosition; }
 
         #endregion
@@ -57,18 +59,19 @@ namespace MortensKombat
             BallDetected += IsBallArmedAndNotHandled;   //Dataprocessing method that invokes BallDetectedVector if ball is dangerous
             BallDetectedVector += IsBallIncoming;       //Transmits data to all teammembers
             EnemyEnterVision += SupplyData;             //Immediately transmits data to blackboard
-            spawnPosition = transform.position;         //Setting the spawn position
+            ControlPoint.Instance.PointChanged += OnCPStateChange;
 
         }
 
-        //private void OnDisable() //Unsubscribe events
-        //{
+        private void OnCPStateChange(CPState cpState)
+        {
 
-        //    FlagEnter -= SpottedFlag;
-        //    BallDetected -= IsBallArmedAndNotHandled;
-        //    BallDetectedVector -= IsBallIncoming;
+            if (cpState == CPState.Flipping && ControlPoint.Instance.CurrentTeam != MyDetectable.TeamID)
+                EnemyTakingCP = true;
+            else if (cpState == CPState.Controlled && ControlPoint.Instance.CurrentTeam == MyDetectable.TeamID)
+                EnemyTakingCP = false;
 
-        //}
+        }
 
         /// <summary>
         /// Called every frame to make decisions.
