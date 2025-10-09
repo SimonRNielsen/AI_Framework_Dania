@@ -2,6 +2,7 @@ using AIGame.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using static UnityEditor.VersionControl.Asset;
 
 namespace MortensKombat
@@ -21,8 +22,9 @@ namespace MortensKombat
         private float lastDataStoredAt;
         private static Action<Vector3, Vector3, Team> BallDetectedVector;   //Transmits data to teammembers
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
-        private static bool attackerNameTaken;
-        private static bool defenderNameTaken;
+        private static List<(float timeRecorded, Ball ball)> timestampForBalls = new List<(float timestamp, Ball ball)>();
+        //private static bool attackerNameTaken;
+        //private static bool defenderNameTaken;
         private string[] attackerNames = new string[3] { "Crusader Morten", "Munke Morten", "Martin" };
         private readonly float arrivalTreshold = 1.5f;
         private Vector3 targetDestination;
@@ -66,6 +68,18 @@ namespace MortensKombat
             spawnPosition = transform.position;
         }
 
+        private void ClearObsoleteBalls()
+        {
+
+            List<Ball> ballsToBeRemoved = timestampForBalls.Where(x => Time.time - x.timeRecorded > 5f || x.ball == null).Select(x => x.ball).ToList();
+            timestampForBalls.RemoveAll(x => Time.time - x.timeRecorded > 5f || x.ball == null);
+            foreach (Ball ball in ballsToBeRemoved)
+                ballsHandled.Remove(ball);
+
+            ballsHandled.RemoveAll(x => x == null);
+
+        }
+
         private void OnCPStateChange(CPState cpState)
         {
 
@@ -90,7 +104,12 @@ namespace MortensKombat
                 behaviourTree.Tick();
 
             if (Time.time - lastTimeDataCleaned >= CLEARDATAINTERVAL)
+            {
+
+                ClearObsoleteBalls();
                 lastTimeDataCleaned = blackboard.RemoveObsoleteData();
+
+            }
 
         }
 
@@ -139,6 +158,7 @@ namespace MortensKombat
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
 
             ballsHandled.Add(ball); //Flags ball as processed
+            timestampForBalls.Add((Time.time, ball));
 
             BallDetectedVector?.Invoke(rigidbody.linearVelocity, ball.transform.position, MyDetectable.TeamID); //Transmits relevant data to teammembers
 
@@ -153,7 +173,7 @@ namespace MortensKombat
         private void IsBallIncoming(Vector3 ballVelocity, Vector3 ballOrigin, Team id)
         {
 
-            if (!CanDodge() || id != MyDetectable.TeamID) return;                                                                                                                       //Early return if unable to dodge (or unnecessary because it's own teams ball)
+            if (!CanDodge() || id != MyDetectable.TeamID || !IsAlive) return;                                                                                                           //Early return if unable to dodge (or unnecessary because it's own teams ball)
 
             Vector3 fromOriginToThis = (transform.position - ballOrigin).normalized;                                                                                                    //Calculate velocity normalized compared to this
             float dot = Vector3.Dot(ballVelocity.normalized, fromOriginToThis);                                                                                                         //Determine Dot value of direction required to hit this, and balls direction
