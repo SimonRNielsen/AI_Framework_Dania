@@ -28,7 +28,7 @@ public class Flee : MKNode
     public override NodeState Evaluate()
     {
 
-        Vector3? closestEnemy = blackboard.GetEnemies(mortenAI).OrderBy(x => Vector3.Distance(mortenAI.transform.position, x.position)).FirstOrDefault()?.position;
+        Vector3? closestEnemy = blackboard.GetEnemies(mortenAI).OrderBy(x => Vector3.Distance(mortenAI.transform.position, x.Position)).FirstOrDefault()?.Position;
 
         fleePosition = spawnPosition;
 
