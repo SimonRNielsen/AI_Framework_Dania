@@ -46,7 +46,7 @@ namespace MortensKombat
 
             if (!initialized)
             {
-                assignedCenter = ChooseRandomArea(isRed);
+                assignedCenter = ChooseAreaByAgentID(isRed);
                 initialized = true;
                 Debug.Log("$\"{(isRed ? \"Red\" : \"Blue\"");
                 //Vector3 center = isRed ? redAreaA : blueAreaA;
@@ -82,14 +82,15 @@ namespace MortensKombat
                 return NodeState.Running; // Bliv ved med at køre
         }
         
-
-            private Vector3 ChooseRandomArea(bool isRed)
+        
+            private Vector3 ChooseAreaByAgentID(bool isRed)
             {
-                bool chooseFirst = Random.value > 0.5f;
+                int id = baseAI.AgentID;
+
                 if(isRed)
-                    return chooseFirst ? redAreaA : redAreaB;
+                    return (id % 2 == 0) ? redAreaA : redAreaB;
                 else
-                    return chooseFirst ? blueAreaA : blueAreaB;
+                    return (id % 2 == 0) ? blueAreaA : blueAreaB;
             }
 
             private bool IsTeamRed()

@@ -20,7 +20,7 @@ namespace MortensKombat
             //return new System.Type[] { typeof(Defender), typeof(Attacker), typeof(Scout), typeof(Defender), typeof(Attacker) }; //original setup
             //return new System.Type[] {  typeof(Attacker) }; //går mellem cirkler
             //return new System.Type[] {  typeof(AttackerHybrid) }; //en i hver side
-            return new System.Type[] { typeof(Defender), typeof(AttackerHybrid), typeof(Scout), typeof(AttackerHybrid), typeof(Attacker) }; //hybrid setup
+            return new System.Type[] { typeof(Defender), typeof(AttackerHybrid), typeof(Scout), typeof(Attacker), typeof(AttackerHybrid)  }; //hybrid setup
 
         }
     }
