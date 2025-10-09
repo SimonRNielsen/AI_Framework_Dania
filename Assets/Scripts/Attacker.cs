@@ -37,6 +37,7 @@ namespace MortensKombat
             MKSequence offenceSequence = new MKSequence(blackboard);
             rootSelector.children.Add(offenceSequence);
 
+            //Offence
             AquireTarget aquireTarget = new AquireTarget(blackboard, this);
             MoveInRange moveInRange = new MoveInRange(blackboard, this);
             ShootThatBunny shootThatBunny = new ShootThatBunny(blackboard, this);
@@ -47,18 +48,19 @@ namespace MortensKombat
             //Defender Move to controlpoint sequence
             MKSequence controlPointCheck = new MKSequence(blackboard);
             AmOutsideCp amOutsideCp = new AmOutsideCp(blackboard, this);
-            MoveToCP moveToCP = new MoveToCP(blackboard, this);
+            AttackerMoveToCP attackerMoveToCP = new AttackerMoveToCP(blackboard, this);
             controlPointCheck.children.Add(amOutsideCp);
-            controlPointCheck.children.Add(moveToCP);
+            controlPointCheck.children.Add(attackerMoveToCP);
 
             //Defender moving around CP sequence
             MKSequence moveAroundCPSequence = new MKSequence(blackboard);
             AmIInCP amIInCP = new AmIInCP(blackboard, this);
-            MoveAroundCP moveAroundCP = new MoveAroundCP(blackboard, this);
+            AttackerMoveAround attackerMoveAround = new AttackerMoveAround(blackboard, this);
             moveAroundCPSequence.children.Add(amIInCP);
-            moveAroundCPSequence.children.Add(moveAroundCP);
+            moveAroundCPSequence.children.Add(attackerMoveAround);
 
             MKSelector defenderSelector = new MKSelector(blackboard);
+            MoveAroundCP moveAroundCP = new MoveAroundCP(blackboard, this);
             defenderSelector.children.Add(controlPointCheck);
             defenderSelector.children.Add(moveAroundCP);
             rootSelector.children.Add(defenderSelector);

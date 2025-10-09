@@ -13,7 +13,7 @@ public class MoveToScouting : MKNode
     private int numberPosition = 0;
     private Vector3 cpPosition;
     private float offset = 0.25f;
-    private float enemyRange = 30f;
+    //private float enemyRange = 30f;
     private float edgePosition = 70f;
 
     private Vector3 spawnPosition;
