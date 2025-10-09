@@ -26,7 +26,7 @@ namespace MortensKombat
         private readonly float arrivalTreshold = 1.5f;
         private Vector3 targetDestination;
         protected MKTree behaviourTree;
-        private Vector3 spawnPosition = Vector3.zero;                       //Spawn position for specific position needs to be set at the under class in construction
+        private Vector3 spawnPosition;                       //Spawn position for specific position needs to be set at the under class in construction
         #endregion
 
         #region Properties

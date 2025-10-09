@@ -12,11 +12,11 @@ public class MoveToScouting : MKNode
     private List<Vector3> positions = new List<Vector3>();
     private int numberPosition = 0;
     private Vector3 cpPosition;
-    private float offset = 0.25f;
+    private float offset = 0.3f;
     private float enemyRange = 30f;
     private float edgePosition = 70f;
-
     private Vector3 spawnPosition;
+
 
     #endregion
 
@@ -61,22 +61,21 @@ public class MoveToScouting : MKNode
         }
 
 
-        //Vector3? closestEnemy = blackboard.GetEnemies(mortenAI)
-        //    .OrderBy(x => Vector3.Distance(mortenAI.transform.position, x.position))
-        //    .FirstOrDefault()?.position;
+        Vector3? closestEnemy = blackboard.GetEnemies(mortenAI)
+            .OrderBy(x => Vector3.Distance(mortenAI.transform.position, x.position))
+            .FirstOrDefault()?.position;
 
-        //if (closestEnemy.HasValue)
-        //{
-        //    if (closestEnemy != Vector3.zero)
-        //    {
-        //        if (Vector3.Distance(closestEnemy.Value, mortenAI.transform.position) < enemyRange)
-        //        {
+        if (closestEnemy.HasValue)
+        {
+            if (closestEnemy != Vector3.zero)
+            {
+                if (Vector3.Distance(closestEnemy.Value, mortenAI.transform.position) < enemyRange)
+                {
+                    return NodeState.Failure;
 
-        //            return NodeState.Failure;
-
-        //        }
-        //    }
-        //}
+                }
+            }
+        }
 
 
         if (HasReachedDestination())        //If the target destination has been reached set the target destination to the next position

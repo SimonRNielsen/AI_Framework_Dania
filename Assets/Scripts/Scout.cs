@@ -48,7 +48,7 @@ namespace MortensKombat
             rootSelector.children.Add(fleeing);
 
             behaviourTree = new MKTree(rootSelector, blackboard);
-                }
+        }
 
         /// <summary>
         /// Called every frame to make decisions.
