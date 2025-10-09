@@ -27,7 +27,7 @@ public class MoveToScouting : MKNode
 
         spawnPosition = mortenAI.SpawnPosition;
 
-        if (spawnPosition.x > 0) //Blue
+        if (mortenAI.MyDetectable.TeamID == Team.Blue) //Blue
         {
             offset = 0.2f;
         }
