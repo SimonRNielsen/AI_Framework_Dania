@@ -1,16 +1,16 @@
 using UnityEngine;
 using AIGame.Core;
 
-//Bevæger sig mellem højre eller venstre hjørne
-
+    //Bevæger sig kun i højre eller venstre hjørne
 
 namespace MortensKombat
 {
+
     /// <summary>
     /// HolyMorten AI implementation.
     /// TODO: Describe your AI strategy here.
     /// </summary>
-    public class Attacker : SuperMorten
+    public class AttackerHybrid : SuperMorten
     {
         /// <summary>
         /// Configure the agent's stats (speed, health, etc.).
@@ -72,14 +72,14 @@ namespace MortensKombat
             //AttackerMoveToCP moveAroundCPSequencattacke = new AttackerMoveToCP(blackboard, this);
             //moveAroundCPSequencattacke.children.Add(moveAroundCPSequencattacke);
 
-            AttackerMoveAround moveAroundCPSequencattacke = new AttackerMoveAround(blackboard, this);
-            moveAroundCPSequencattacke.children.Add(moveAroundCPSequencattacke);
+            AttackerMoveAroundHybrid moveAroundCPSequencattackeHybrid = new AttackerMoveAroundHybrid(blackboard, this);
+            moveAroundCPSequencattackeHybrid.children.Add(moveAroundCPSequencattackeHybrid);
 
 
 
             rootSelector.children.Add(offenceSequence);
             rootSelector.children.Add(contestedControlPointSequence);
-            rootSelector.children.Add(moveAroundCPSequencattacke);
+            rootSelector.children.Add(moveAroundCPSequencattackeHybrid);
             //rootSelector.children.Add(attackerMoveAround);
 
 

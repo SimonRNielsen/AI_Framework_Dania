@@ -5,6 +5,8 @@ using UnityEngine.AI;
 using MortensKombat;
 using System.Linq;
 
+//Bevæger sig mellem højre eller venstre hjørne
+
 
 namespace MortensKombat
 {
@@ -14,13 +16,12 @@ namespace MortensKombat
         private SuperMorten baseAI;
         private Vector3 controlPointPosition = AIGame.Core.ControlPoint.Instance.transform.position;
         private Vector3 destination = Vector3.zero;
-        private bool teamRed = true;
 
         private Vector3 redAreaA = new Vector3(-19, 0, 32); //5
         private Vector3 redAreaB = new Vector3(-18, 0, -32);
         private Vector3 blueAreaA = new Vector3(20, 0, 30); 
         private Vector3 blueAreaB = new Vector3(19, 0, -32);
-        private float areaRadius = 1; //15//40
+        private float areaRadius = 15; //15//40
 
 
 
@@ -156,6 +157,7 @@ namespace MortensKombat
             // Hvis vi ikke har et mål, eller vi er tæt på vores nuværende mål - vælg et nyt
             if (baseAI.TargetDestination == Vector3.zero || distance < baseAI.ArrivalTreshold)
             {
+                center = ChooseRandomArea(isRed);
                 Vector2 offset = Random.insideUnitCircle * areaRadius;
                 Vector3 offset3D = new Vector3(offset.x, 0f, offset.y);
                 baseAI.TargetDestination = center + offset3D;
@@ -173,6 +175,7 @@ namespace MortensKombat
             // Hvis der ikke er en aktiv path, sæt en ny destination for at genstarte bevægelsen
             if (!baseAI.HasPath())
             {
+                center = ChooseRandomArea(isRed);
                 Vector2 offset = Random.insideUnitCircle * areaRadius;
                 Vector3 offset3D = new Vector3(offset.x, 0f, offset.y);
                 baseAI.TargetDestination = center + offset3D;
@@ -181,6 +184,15 @@ namespace MortensKombat
             }
 
             return NodeState.Running; // Bliv ved med at køre
+        }
+
+        private Vector3 ChooseRandomArea(bool isRed)
+        {
+            bool chooseFirst = Random.value > 0.5f;
+            if(isRed)
+                return chooseFirst ? redAreaA : redAreaB;
+            else
+                return chooseFirst ? blueAreaA : blueAreaB;
         }
 
         private bool IsTeamRed()

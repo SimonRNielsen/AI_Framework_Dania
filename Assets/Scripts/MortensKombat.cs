@@ -18,7 +18,8 @@ namespace MortensKombat
         protected override System.Type[] GetAgentTypes()
         {
             //return new System.Type[] { typeof(Defender), typeof(Attacker), typeof(Scout), typeof(Defender), typeof(Attacker) };
-            return new System.Type[] {  typeof(Attacker) };
+            //return new System.Type[] {  typeof(Attacker) }; //går mellem cirkler
+            return new System.Type[] {  typeof(AttackerHybrid) }; //en i hver side
         }
     }
 }
