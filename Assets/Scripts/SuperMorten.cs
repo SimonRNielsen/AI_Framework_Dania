@@ -67,10 +67,16 @@ namespace MortensKombat
         {
 
             if (cpState == CPState.Flipping && ControlPoint.Instance.CurrentTeam != MyDetectable.TeamID)
+            {
                 EnemyTakingCP = true;
-            else if (cpState == CPState.Controlled && ControlPoint.Instance.CurrentTeam == MyDetectable.TeamID)
-                EnemyTakingCP = false;
+                Debug.Log("EnemytakingCp true");
+            }
+            //else if (cpState == CPState.Controlled && ControlPoint.Instance.CurrentTeam == MyDetectable.TeamID)
+            //{
+            //    EnemyTakingCP = false;
+            //    Debug.Log("EnemytakingCp false");
 
+            //}
         }
 
         /// <summary>
@@ -88,6 +94,12 @@ namespace MortensKombat
 
             if (Time.time - lastTimeDataCleaned >= CLEARDATAINTERVAL)
                 lastTimeDataCleaned = blackboard.RemoveObsoleteData();
+
+            if (ControlPoint.Instance.CurrentTeam == MyDetectable.TeamID)
+            {
+                Debug.Log($"EnemyTakingCP set to false");
+                EnemyTakingCP = false;
+            }
 
         }
 

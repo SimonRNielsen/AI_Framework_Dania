@@ -34,10 +34,9 @@ namespace MortensKombat
 
             MKSelector rootSelector = new MKSelector(blackboard);
 
-            MKSequence offenceSequence = new MKSequence(blackboard);
-            rootSelector.children.Add(offenceSequence);
 
-            //Offence
+            //Offencesequence
+            MKSequence offenceSequence = new MKSequence(blackboard);
             AquireTarget aquireTarget = new AquireTarget(blackboard, this);
             MoveInRange moveInRange = new MoveInRange(blackboard, this);
             ShootThatBunny shootThatBunny = new ShootThatBunny(blackboard, this);
@@ -53,20 +52,34 @@ namespace MortensKombat
             controlPointCheckSequence.children.Add(amOutsideCp);
             controlPointCheckSequence.children.Add(moveToCP);
             
-            MKSelector contestedControlPointSelector = new MKSelector(blackboard); //Selector: Is CP ours? NO -> Run controlPointCheckSequence 
+            //Contested CP
+            MKSequence contestedControlPointSequence = new MKSequence(blackboard); //Sequence: Is CP Theirs? YES -> Run controlPointCheckSequence 
             IsCPContested isCPContested = new IsCPContested(blackboard, this);
-            contestedControlPointSelector.children.Add(isCPContested);
-            contestedControlPointSelector.children.Add(controlPointCheckSequence);
+            contestedControlPointSequence.children.Add(isCPContested);
+            contestedControlPointSequence.children.Add(controlPointCheckSequence);
 
-            //Defender moving around CP sequence
-            MKSequence moveAroundCPSequence = new MKSequence(blackboard);
-            AmIInCP amIInCP = new AmIInCP(blackboard, this);
-            AttackerMoveAround attackerMoveAround = new AttackerMoveAround(blackboard, this);
-            moveAroundCPSequence.children.Add(amIInCP);
-            moveAroundCPSequence.children.Add(attackerMoveAround);
+            ////Defender moving around CP sequence
+            //MKSequence moveAroundCPSequence = new MKSequence(blackboard);
+            ////AmIInCP amIInCP = new AmIInCP(blackboard, this);
+            //AttackerMoveAround attackerMoveAround = new AttackerMoveAround(blackboard, this);
+            ////moveAroundCPSequence.children.Add(amIInCP);
+            //attackerMoveAround.children.Add(attackerMoveAround);
 
-            rootSelector.children.Add(contestedControlPointSelector);
-            rootSelector.children.Add(moveAroundCPSequence);
+            //virker
+            //AttackerMoveToCP moveAroundCPSequencattacke = new AttackerMoveToCP(blackboard, this);
+            //moveAroundCPSequencattacke.children.Add(moveAroundCPSequencattacke);
+
+            AttackerMoveAround moveAroundCPSequencattacke = new AttackerMoveAround(blackboard, this);
+            moveAroundCPSequencattacke.children.Add(moveAroundCPSequencattacke);
+
+
+
+            rootSelector.children.Add(offenceSequence);
+            rootSelector.children.Add(contestedControlPointSequence);
+            rootSelector.children.Add(moveAroundCPSequencattacke);
+            //rootSelector.children.Add(attackerMoveAround);
+
+
 
             behaviourTree = new MKTree(rootSelector, blackboard);
 

@@ -19,7 +19,7 @@ namespace MortensKombat
             if (baseAI.Target != null)
             {
                 
-                baseAI.FaceTarget(baseAI.Target.Position);
+                //baseAI.FaceTarget(baseAI.Target.Position);
                 
                 if (baseAI.ThrowBallAt(baseAI.Target.enemy))
                     return NodeState.Success;
