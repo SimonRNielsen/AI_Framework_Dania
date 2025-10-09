@@ -29,8 +29,8 @@ namespace MortensKombat
         {
 
             AllocateStat(StatType.Speed, 9);
-            AllocateStat(StatType.ProjectileRange, 2);
-            AllocateStat(StatType.VisionRange, 2);
+            AllocateStat(StatType.ProjectileRange, 0);
+            AllocateStat(StatType.VisionRange, 4);
             AllocateStat(StatType.DodgeCooldown, 7);
             AllocateStat(StatType.ReloadSpeed, 0);
 

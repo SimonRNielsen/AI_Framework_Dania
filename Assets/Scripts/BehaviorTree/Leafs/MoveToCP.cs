@@ -10,7 +10,7 @@ public class MoveToCP : MKNode
     #region Fields
     private SuperMorten supMorten;
     ControlPoint controlPoint = ControlPoint.Instance;
-    private float CPArrivalThreshold = 10f;
+    private float CPArrivalThreshold = 3f;
     #endregion
 
     #region Constructor
@@ -26,13 +26,13 @@ public class MoveToCP : MKNode
     #region Methods
     public override NodeState Evaluate()
     {
-        Debug.Log($"{supMorten.name} moving toward ControlPoint");
+        //Debug.Log($"{supMorten.name} moving toward ControlPoint");
 
 
         //Checking for Control Point spawn
         if (controlPoint == null)
         {
-            Debug.Log("Missing control point");
+            //Debug.Log("Missing control point");
             return NodeState.Failure;
         }
 
@@ -63,7 +63,7 @@ public class MoveToCP : MKNode
         //Agent arrives at CP
         if (distance < CPArrivalThreshold)
         {
-            Debug.Log("MoveToCP succes");
+            //Debug.Log("MoveToCP succes");
             return NodeState.Success;
         }
 

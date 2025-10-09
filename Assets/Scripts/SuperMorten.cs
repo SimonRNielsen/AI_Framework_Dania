@@ -2,6 +2,7 @@ using AIGame.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using static UnityEditor.VersionControl.Asset;
 
 namespace MortensKombat
@@ -21,12 +22,15 @@ namespace MortensKombat
         private float lastDataStoredAt;
         private static Action<Vector3, Vector3, Team> BallDetectedVector;   //Transmits data to teammembers
         private static List<Ball> ballsHandled = new List<Ball>();          //Tracks which balls have been handled
-        private static bool attackerNameTaken;
-        private static bool defenderNameTaken;
+        private static List<(float timeRecorded, Ball ball)> timestampForBalls = new List<(float timestamp, Ball ball)>();
+        //private static bool attackerNameTaken;
+        //private static bool defenderNameTaken;
+        private string[] attackerNames = new string[3] { "Crusader Morten", "Munke Morten", "Martin" };
         private readonly float arrivalTreshold = 1.5f;
         private Vector3 targetDestination;
         protected MKTree behaviourTree;
         private Vector3 spawnPosition;                       //Spawn position for specific position needs to be set at the under class in construction
+        private static int nameInArray = -1;
         #endregion
 
         #region Properties
@@ -35,6 +39,7 @@ namespace MortensKombat
         public float ArrivalTreshold { get => arrivalTreshold; }
         public bool EnemyTakingCP { get; set; } = false;
         public Vector3 SpawnPosition { get => spawnPosition; }
+        
 
         #endregion
 
@@ -61,6 +66,18 @@ namespace MortensKombat
             ControlPoint.Instance.PointChanged += OnCPStateChange;
 
             spawnPosition = transform.position;
+        }
+
+        private void ClearObsoleteBalls()
+        {
+
+            List<Ball> ballsToBeRemoved = timestampForBalls.Where(x => Time.time - x.timeRecorded > 5f || x.ball == null).Select(x => x.ball).ToList();
+            timestampForBalls.RemoveAll(x => Time.time - x.timeRecorded > 5f || x.ball == null);
+            foreach (Ball ball in ballsToBeRemoved)
+                ballsHandled.Remove(ball);
+
+            ballsHandled.RemoveAll(x => x == null);
+
         }
 
         private void OnCPStateChange(CPState cpState)
@@ -93,6 +110,9 @@ namespace MortensKombat
                 behaviourTree.Tick();
 
             if (Time.time - lastTimeDataCleaned >= CLEARDATAINTERVAL)
+            {
+
+                ClearObsoleteBalls();
                 lastTimeDataCleaned = blackboard.RemoveObsoleteData();
 
             if (ControlPoint.Instance.CurrentTeam == MyDetectable.TeamID)
@@ -100,6 +120,8 @@ namespace MortensKombat
                 Debug.Log($"EnemyTakingCP set to false");
                 EnemyTakingCP = false;
             }
+
+        }
 
         }
 
@@ -148,6 +170,7 @@ namespace MortensKombat
             Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
 
             ballsHandled.Add(ball); //Flags ball as processed
+            timestampForBalls.Add((Time.time, ball));
 
             BallDetectedVector?.Invoke(rigidbody.linearVelocity, ball.transform.position, MyDetectable.TeamID); //Transmits relevant data to teammembers
 
@@ -162,10 +185,10 @@ namespace MortensKombat
         private void IsBallIncoming(Vector3 ballVelocity, Vector3 ballOrigin, Team id)
         {
 
-            if (!CanDodge() || id != MyDetectable.TeamID) return;                                                                                                                       //Early return if unable to dodge (or unnecessary because it's own teams ball)
+            if (!CanDodge() || id != MyDetectable.TeamID || !IsAlive) return;                                                                                                           //Early return if unable to dodge (or unnecessary because it's own teams ball)
 
             Vector3 fromOriginToThis = (transform.position - ballOrigin).normalized;                                                                                                    //Calculate velocity normalized compared to this
-            float dot = Vector3.Dot(ballVelocity.normalized, fromOriginToThis);                                                                                                                    //Determine Dot value of direction required to hit this, and balls direction
+            float dot = Vector3.Dot(ballVelocity.normalized, fromOriginToThis);                                                                                                         //Determine Dot value of direction required to hit this, and balls direction
 
             //Debug.LogWarning($"Dot value for {MyName} was: {dot}"); //Debugging and Testing
 
@@ -186,11 +209,14 @@ namespace MortensKombat
                 case "Scout":
                     return "Undercover Morten";
                 case "Defender":
-                    defenderNameTaken = !defenderNameTaken;
-                    return defenderNameTaken ? "Crusader Morten" : "Holy Morten";
+                    //defenderNameTaken = !defenderNameTaken;
+                    return /*defenderNameTaken ? "Crusader Morten" :*/ "Holy Morten";
                 case "Attacker":
-                    attackerNameTaken = !attackerNameTaken;
-                    return attackerNameTaken ? "Munke Morten" : "Martin";
+                    if (nameInArray == attackerNames.Length - 1)
+                        nameInArray = -1;
+                    nameInArray++;
+                    //attackerNameTaken = !attackerNameTaken;
+                    return /*attackerNameTaken ? "Munke Morten" : "Martin"*/ attackerNames[nameInArray];
                 default:
                     return ToString();
             }

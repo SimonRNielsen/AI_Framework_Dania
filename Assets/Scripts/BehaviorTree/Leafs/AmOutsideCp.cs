@@ -21,12 +21,12 @@ namespace MortensKombat
 
             if (outsideCP)
             {
-                Debug.Log("Am outside CP is succes");
+                //Debug.Log("Am outside CP is succes");
                 return NodeState.Success;
             }
 
             //Not outside of CP
-            Debug.Log("Not Outside CP");
+            //Debug.Log("Not Outside CP");
             return NodeState.Failure;
 
         }
