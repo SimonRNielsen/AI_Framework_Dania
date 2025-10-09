@@ -34,18 +34,22 @@ namespace MortensKombat
 
             base.StartAI();
 
+            //Scouting
             MKSequence scouting = new MKSequence(blackboard);
             MoveToScouting moveToScouting = new MoveToScouting(blackboard, this);
-
-            MKSequence fleeing = new MKSequence(blackboard);
-            Flee flee = new Flee(blackboard, this);
-
-            fleeing.children.Add(flee);
             scouting.children.Add(moveToScouting);
 
+            //Fleeing
+            MKSequence fleeing = new MKSequence(blackboard);
+            EnemyInrange enemyInrange = new EnemyInrange(blackboard, this);
+            Flee flee = new Flee(blackboard, this);
+            fleeing.children.Add(enemyInrange);
+            fleeing.children.Add(flee);
+
+            //root selector
             MKSelector rootSelector = new MKSelector(blackboard);
-            rootSelector.children.Add(scouting);
             rootSelector.children.Add(fleeing);
+            rootSelector.children.Add(scouting);
 
             behaviourTree = new MKTree(rootSelector, blackboard);
         }

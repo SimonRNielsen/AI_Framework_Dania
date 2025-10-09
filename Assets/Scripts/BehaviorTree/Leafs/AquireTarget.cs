@@ -22,7 +22,7 @@ namespace MortensKombat
                 float distanceToTarget = float.PositiveInfinity;
                 foreach (EnemyData enemy in enemies)
                 {
-                    float distanceToEnemy = Vector3.Distance(baseAI.transform.position, enemy.position);
+                    float distanceToEnemy = Vector3.Distance(baseAI.transform.position, enemy.Position);
                     if (distanceToEnemy < distanceToTarget)
                     {
                         targetEnemy = enemy;
