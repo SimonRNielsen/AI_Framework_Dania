@@ -28,6 +28,7 @@ namespace MortensKombat
         private Vector3 targetDestination;
         protected MKTree behaviourTree;
         private Vector3 spawnPosition;                       //Spawn position for specific position needs to be set at the under class in construction
+        private static int nameInArray = -1;
         #endregion
 
         #region Properties
@@ -36,7 +37,6 @@ namespace MortensKombat
         public float ArrivalTreshold { get => arrivalTreshold; }
         public bool EnemyTakingCP { get; set; } = false;
         public Vector3 SpawnPosition { get => spawnPosition; }
-        private static int NameInArray { get; set; } = -1;
         
 
         #endregion
@@ -180,11 +180,11 @@ namespace MortensKombat
                     //defenderNameTaken = !defenderNameTaken;
                     return /*defenderNameTaken ? "Crusader Morten" :*/ "Holy Morten";
                 case "Attacker":
-                    if (NameInArray == attackerNames.Length - 1)
-                        NameInArray = -1;
-                    NameInArray++;
+                    if (nameInArray == attackerNames.Length - 1)
+                        nameInArray = -1;
+                    nameInArray++;
                     //attackerNameTaken = !attackerNameTaken;
-                    return /*attackerNameTaken ? "Munke Morten" : "Martin"*/ attackerNames[NameInArray];
+                    return /*attackerNameTaken ? "Munke Morten" : "Martin"*/ attackerNames[nameInArray];
                 default:
                     return ToString();
             }
