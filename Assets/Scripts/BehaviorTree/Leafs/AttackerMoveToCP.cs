@@ -46,15 +46,15 @@ public class AttackerMoveToCP : MKNode
         //Sets target til Controlpoint (+x so we don't crash with the other team at 0,0) - Agent moves to Control point
 
 
-        ////Random offset can also be applied instead of simple locked offset
-        //Vector2 randomOffset = Random.insideUnitCircle * 10f; //the number is radius
-        //Vector3 offset3D = new Vector3(randomOffset.x, 0f, randomOffset.y);
-        //supMorten.TargetDestination = controlPoint.transform.position + offset3D;
+        //Random offset can also be applied instead of simple locked offset
+        Vector2 randomOffset = Random.insideUnitCircle * 5f; //the number is radius
+        Vector3 offset3D = new Vector3(randomOffset.x, 0f, randomOffset.y);
+        supMorten.TargetDestination = controlPoint.transform.position + offset3D;
 
 
         //Simple locked offset
         //supMorten.TargetDestination = controlPoint.transform.position + new Vector3(15f, 0f, 0f);
-        supMorten.TargetDestination = controlPoint.transform.position;
+        //supMorten.TargetDestination = controlPoint.transform.position;
         supMorten.MoveTo(supMorten.TargetDestination);
 
         //Calculates distance between agent and control point
